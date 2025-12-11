@@ -1,5 +1,22 @@
 import os
 import termios
+import select
+import textwrap
+
+
+def read_from_tty(file_descriptor: int, timeout: int = 2):
+    buff = b""
+
+    while True:
+        ready = select.select([file_descriptor], [], [], timeout)
+
+        if ready[0]:
+            buff += os.read(file_descriptor, 250)
+
+        else:
+            break
+
+    return buff.decode()
 
 
 def main():
@@ -34,14 +51,23 @@ def main():
         runtime_tty_attr = termios.tcgetattr(tty_fd)
         print(f"runtime_tty_attr = {runtime_tty_attr}")
 
-        print(os.read(tty_fd, 100))
+        print(read_from_tty(tty_fd))
 
         # turn on onboard led
         os.write(tty_fd, b"import machine\r\n")
         os.write(tty_fd, b"led = machine.Pin('LED', machine.Pin.OUT)\r\n")
         os.write(tty_fd, b"led.on()\r\n")
 
-        print(os.read(tty_fd, 200))
+        # cmd = """
+        #         for i in range(100):
+        #             print(f'test_{i}')
+        #     """
+
+        # os.write(tty_fd, textwrap.dedent(cmd).encode())
+
+        os.write(tty_fd, b"print('hello pico')\r\n")
+
+        print(read_from_tty(tty_fd))
 
     except Exception as e:
         print(e)
