@@ -45,7 +45,8 @@ def enter_raw_repl(file_descriptor: int):
     read_from_tty(file_descriptor, stop_at=b">R")
 
     flow_control_window_size = read_from_tty(file_descriptor, length=2)
-    print(f"flow_control_window_size={int.from_bytes(flow_control_window_size)}")
+    print(
+        f"flow_control_window_size={int.from_bytes(flow_control_window_size)}")
 
     success_response = read_from_tty(file_descriptor, length=2)
 
@@ -88,50 +89,38 @@ def write_bytes_to_tty(file_descriptor: int, data: bytes):
     print(f"response = {response}")
 
 
+def setup_tty(tty_fd: int):
+    baudrate = 115200
+
+    ori_tty_attr = termios.tcgetattr(tty_fd)
+    iflag, oflag, cflag, lflag, ispeed, ospeed, cc = ori_tty_attr
+
+    ispeed = baudrate
+    ospeed = baudrate
+
+    timeout = 5
+
+    cc[termios.VTIME] = int(timeout * 10)
+    cc[termios.VMIN] = 0
+
+    # enables raw mode
+    cflag |= (termios.CLOCAL | termios.CREAD)
+
+    termios.tcsetattr(
+        tty_fd,
+        termios.TCSANOW,
+        [iflag, oflag, cflag, lflag, ispeed, ospeed, cc])
+
+
 def main():
     interface = "/dev/tty.usbmodem12301"
-    baudrate = 115200
 
     tty_fd = os.open(interface, os.O_RDWR | os.O_NONBLOCK)
 
     try:
-        ori_tty_attr = termios.tcgetattr(tty_fd)
-        iflag, oflag, cflag, lflag, ispeed, ospeed, cc = ori_tty_attr
-
-        # print(f"orig_tty_attr = {ori_tty_attr}")
-
-        ispeed = baudrate
-        ospeed = baudrate
-
-        timeout = 5
-
-        cc[termios.VTIME] = int(timeout * 10)
-        # min number of characters for read
-        cc[termios.VMIN] = 0
-
-        # enables raw mode
-        cflag |= (termios.CLOCAL | termios.CREAD)
-
-        termios.tcsetattr(
-            tty_fd,
-            termios.TCSANOW,
-            [iflag, oflag, cflag, lflag, ispeed, ospeed, cc])
-
-        # runtime_tty_attr = termios.tcgetattr(tty_fd)
-        # print(f"runtime_tty_attr = {runtime_tty_attr}")
-
-        # turn on onboard led
-        # os.write(tty_fd, b"import machine\r\n")
-        # os.write(tty_fd, b"led = machine.Pin('LED', machine.Pin.OUT)\r\n")
-        # os.write(tty_fd, b"led.on()\r\n")
-
-        # os.write(tty_fd, b"print('hello pico')\r\n")
+        setup_tty(tty_fd)
 
         soft_reboot(file_descriptor=tty_fd)
-
-        # os.write(tty_fd, b"\x01\x05A\x01print(123)\x04")
-        # print(read_from_tty(file_descriptor=tty_fd))
-
         enter_raw_repl(tty_fd)
 
         write_bytes_to_tty(tty_fd, b'print("hello pico")')
