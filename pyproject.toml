@@ -1,0 +1,27 @@
+
+[build-system]
+requires = ["setuptools==70.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = []
+
+[project]
+name = "rubix-cli"
+version = "0.0.1"
+authors = [
+  { name = "zNitche" },
+]
+description = "MicroPython REPL emulator for Unix"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "License :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.10"
+
+[project.urls]
+Homepage = "https://github.com/zNitche/rubix-cli"
+Issues = "https://github.com/zNitche/rubix-cli/issues"
