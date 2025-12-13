@@ -29,7 +29,6 @@ class Commander:
 
         subs_to_replace = [
             (MP_CONSTS.EOT_HEX.decode(), ""),
-            ("\r\n", "")
         ]
 
         for it in subs_to_replace:
@@ -55,13 +54,22 @@ class Commander:
             cmd = f"""
                 import uos
 
-                files = uos.listdir('{path}')
-                print(','.join(files))
+                for file in uos.listdir('{path}'):
+                    path = '{path}' + '/' + file
+                    stats = uos.stat(path)
+
+                    st_size = str(stats[6])
+                    st_ctime = str(stats[9])
+
+                    row = st_size + " " + st_ctime + " " + path
+
+                    print(row)
             """
 
             data, errors = self.__send_command(cmd, session)
 
             if errors:
-                raise Exception(errors)
+                self.__logger.exception(errors)
+                return
 
-            return data.split(',')
+            self.__logger.info(data)
