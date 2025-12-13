@@ -47,7 +47,7 @@ class Commander:
 
         return response, errors
 
-    def list_files(self, path: str = "/"):
+    def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
         with self.__tty_session() as session:
@@ -64,6 +64,50 @@ class Commander:
                     row = st_size + " " + st_ctime + " " + path
 
                     print(row)
+            """
+
+            data, errors = self.__send_command(cmd, session)
+
+            if errors:
+                self.__logger.exception(errors)
+                return
+
+            self.__logger.info(data)
+
+    def rmdir(self, path: str):
+        self.__logger.info(f"rmdir '{path}'")
+
+        with self.__tty_session() as session:
+            cmd = f"""
+                import uos
+
+                def file_exists(path):
+                    try:
+                        uos.stat(path)
+
+                        return True
+                    except OSError:
+                        return False
+
+                def rmdir(path):
+                    uos.chdir(path)
+
+                    for file in uos.listdir():
+                        try:
+                            uos.remove(file)
+                        except OSError:
+                            pass
+                            
+                    for dir in uos.listdir():
+                        rmdir(dir)
+
+                    uos.chdir("..")
+                    os.rmdir("{path}")
+
+                if not file_exists("{path}"):
+                    print("{path} doesn't exist")
+                else:
+                    rmdir("{path}")
             """
 
             data, errors = self.__send_command(cmd, session)

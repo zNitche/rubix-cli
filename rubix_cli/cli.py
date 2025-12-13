@@ -22,8 +22,13 @@ class CLI:
         commands = {
             "ls": {
                 "description": "",
-                "func": self.__commander.list_files,
-                "args": self.__get_func_args(self.__commander.list_files)
+                "func": self.__commander.ls,
+                "args": self.__get_func_args(self.__commander.ls)
+            },
+            "rmdir": {
+                "description": "",
+                "func": self.__commander.rmdir,
+                "args": self.__get_func_args(self.__commander.rmdir)
             }
         }
 
