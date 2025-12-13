@@ -8,7 +8,7 @@ from rubix_cli.core import MP_CONSTS
 
 class SerialTTY:
     def __init__(self, interface: str, baudrate: int = 115200, timeout: int = 2,
-                 write_buffer_size: int = 128):
+                 write_buffer_size: int = 128, debug: bool = False):
 
         self.__interface = interface
 
@@ -16,16 +16,16 @@ class SerialTTY:
         self.__timeout = timeout
         self.__write_buffer_size = write_buffer_size
 
-        self.__logger = self.__get_logger()
+        self.__logger = self.__get_logger(debug)
 
         self.__tty_fd = self.__open_fd()
         self.__setup_interface()
 
-    def __get_logger(self):
-        l = Logger(logger_name="rubix-cli-serial")
-        l.init()
+    def __get_logger(self, debug: bool):
+        logger = Logger(logger_name="rubix-cli-serial")
+        logger.init(debug=debug)
 
-        return l
+        return logger
 
     def __open_fd(self):
         return os.open(self.__interface, os.O_RDWR | os.O_NONBLOCK)
@@ -97,7 +97,7 @@ class SerialTTY:
         is_success = self.read_until(stop_at=MP_CONSTS.EOT_HEX)
 
         if is_success.endswith(MP_CONSTS.EOT_HEX):
-            self.__logger.info(
+            self.__logger.debug(
                 f"successfully wrote {len(data)} bytes to device")
 
         response = self.read_until(stop_at=MP_CONSTS.EOT_HEX)
@@ -114,7 +114,7 @@ class SerialTTY:
         if not soft_reboot_state.endswith(MP_CONSTS.SOFT_REBOOT):
             raise Exception("soft restart failed")
 
-        self.__logger.info("rebooted")
+        self.__logger.debug("rebooted")
 
     def enter_raw_repl(self):
         for _ in range(2):
@@ -133,9 +133,9 @@ class SerialTTY:
         if not write_response or not write_response.endswith(MP_CONSTS.SUCCESS_RESPONSE_END_HEX):
             raise Exception("failed to enter raw REPL")
 
-        self.__logger.info("entered raw repl")
+        self.__logger.debug("entered raw repl")
 
     def exit_raw_repl(self):
         self.write(b"\r\x02")
 
-        self.__logger.info("exit from raw repl")
+        self.__logger.debug("exit from raw repl")

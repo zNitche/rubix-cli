@@ -5,11 +5,11 @@ from rubix_cli.core.utils import Logger
 
 
 class Commander:
-    def __init__(self, interface: str):
-        self.__serial = SerialTTY(interface=interface)
+    def __init__(self, interface: str, debug: bool = False):
+        self.__serial = SerialTTY(interface=interface, debug=debug)
 
         self.__logger = Logger(logger_name="rubix-cli")
-        self.__logger.init()
+        self.__logger.init(debug=debug)
 
     @contextmanager
     def __tty_session(self):
@@ -38,26 +38,28 @@ class Commander:
         return decoded_response
 
     def __send_command(self, cmd: str, serial_session: SerialTTY):
-        cmd = textwrap.dedent(cmd)
-        r = serial_session.send_command(data=cmd)
+        self.__logger.debug(f"sending: {cmd}")
 
-        response = self.__parse_command_response(r[0])
-        errors = self.__parse_command_response(r[1])
+        cmd = textwrap.dedent(cmd)
+        raw_response, raw_error = serial_session.send_command(data=cmd)
+
+        response = self.__parse_command_response(raw_response)
+        errors = self.__parse_command_response(raw_error)
 
         return response, errors
 
     def list_files(self, path: str = "/"):
+        self.__logger.info(f"ls at '{path}'")
+
         with self.__tty_session() as session:
             cmd = f"""
                 import uos
-                
+
                 files = uos.listdir('{path}')
                 print(','.join(files))
             """
 
-            response = self.__send_command(cmd, session)
-            data = response[0]
-            errors = response[1]
+            data, errors = self.__send_command(cmd, session)
 
             if errors:
                 raise Exception(errors)

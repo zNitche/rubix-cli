@@ -6,7 +6,7 @@ def main(args: argparse.Namespace):
     interface = args.interface
     debug = args.debug
 
-    commander = Commander(interface=interface)
+    commander = Commander(interface=interface, debug=debug)
     files = commander.list_files()
 
     print(files)
