@@ -3,61 +3,89 @@ import inspect
 from rubix_cli.core import Commander
 
 
-def __get_func_args(func):
-    args = {}
-    inspect_data = inspect.signature(func).parameters
+class CLI:
+    def __init__(self, commander: Commander):
+        self.__commander = commander
 
-    for key, val in inspect_data.items():
-        args[key] = val.annotation.__name__
+        self.__commands = self.__get_commands()
 
-    return args
+    def __get_func_args(self, func):
+        args = {}
+        inspect_data = inspect.signature(func).parameters
 
+        for key, val in inspect_data.items():
+            args[key] = val.annotation.__name__
 
-def get_commands(commander: Commander):
-    commands = {
-        "ls": {
-            "description": "",
-            "func": commander.list_files,
-            "args": __get_func_args(commander.list_files)
+        return args
+
+    def __get_commands(self):
+        commands = {
+            "ls": {
+                "description": "",
+                "func": self.__commander.list_files,
+                "args": self.__get_func_args(self.__commander.list_files)
+            }
         }
-    }
 
-    return commands
+        return commands
 
+    def list_commands(self):
+        for command_name in self.__commands:
+            cmd_details = self.__commands[command_name]
 
-def list_commands(commander: Commander):
-    commands = get_commands(commander)
+            print(f"### {command_name}")
+            print(f"args: {cmd_details['args']}")
 
-    for command_name in commands:
-        cmd_details = commands[command_name]
+            description = cmd_details.get("description")
 
-        print(f"### {command_name}")
-        print(f"args: {cmd_details['args']}")
+            if description:
+                print(f"description: {description}")
 
-        description = cmd_details.get("description")
+    def execute_command(self, command: str, *args):
+        command_data = self.__commands.get(command)
 
-        if description:
-            print(f"description: {description}")
+        if not command_data:
+            raise Exception(f"unknown command '{command}'")
+
+        command_data["func"](*args)
 
 
 def main(args: argparse.Namespace):
-    interface = args.interface
+    interface = args.device
+
+    cmd = args.cmd
+    cmd_args = args.cmd_args
+
+    show_commands = args.commands
     debug = args.debug
 
     commander = Commander(interface=interface, debug=debug)
+    cli = CLI(commander=commander)
 
-    list_commands(commander)
+    if show_commands:
+        cli.list_commands()
+        return
 
-    files = commander.list_files(path="/")
+    if not cmd:
+        raise Exception("cmd not passed")
 
-    print(files)
+    cli.execute_command(cmd, *cmd_args)
 
 
 def get_args():
     argument_parser = argparse.ArgumentParser()
 
     argument_parser.add_argument(
-        "--interface", type=str, help="example, /dev/tty1", required=True)
+        "--device", type=str, help="example, /dev/tty1", required=True)
+
+    argument_parser.add_argument(
+        '--cmd', help='command name, for example ls /', required=False)
+
+    argument_parser.add_argument(
+        'cmd_args', nargs='*', help='command args, for example /')
+
+    argument_parser.add_argument("--commands", action=argparse.BooleanOptionalAction,
+                                 default=False, help="get available commands", required=False)
 
     argument_parser.add_argument("--debug", action=argparse.BooleanOptionalAction,
                                  default=False, help="debug mode", required=False)
