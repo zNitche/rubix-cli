@@ -90,7 +90,10 @@ class SerialTTY:
             self.__logger.info(
                 f"successfully wrote {len(data)} bytes to device")
 
-        return self.read_until(stop_at=MP_CONSTS.EOT_HEX)
+        response = self.read_until(stop_at=MP_CONSTS.EOT_HEX)
+        errors = self.read_until(stop_at=MP_CONSTS.EOT_HEX)
+
+        return response, errors
 
     def soft_reboot(self):
         self.write(MP_CONSTS.EOT_HEX)
