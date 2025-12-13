@@ -1,5 +1,5 @@
 # rubix-cli
-REPL emulator for MicroPython &amp; RaspberryPi Pico
+MicroPython REPL emulator for Unix
 
 
 ```
@@ -7,7 +7,7 @@ pip3 install -e .
 ```
 
 ```
-rubix-cli --interface "/dev/tty1"
+rubix-cli --device /dev/tty1 --cmd ls /test
 ```
 
 
