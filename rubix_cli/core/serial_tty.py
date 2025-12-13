@@ -7,10 +7,14 @@ from rubix_cli.core import MP_CONSTS
 
 
 class SerialTTY:
-    def __init__(self, interface: str, baudrate: int = 115200, timeout: int = 2):
+    def __init__(self, interface: str, baudrate: int = 115200, timeout: int = 2,
+                 write_buffer_size: int = 128):
+
         self.__interface = interface
+
         self.__baudrate = baudrate
         self.__timeout = timeout
+        self.__write_buffer_size = write_buffer_size
 
         self.__logger = self.__get_logger()
 
@@ -79,8 +83,14 @@ class SerialTTY:
         return buff
 
     def send_command(self, data: bytes | str):
-        self.write(data=data)
-        time.sleep(0.05)
+        data_length = len(data)
+
+        for chunk_start in range(0, data_length, self.__write_buffer_size):
+            chunk_offset = min(chunk_start + self.__write_buffer_size, data_length)
+            chunk = data[chunk_start:chunk_offset]
+
+            self.write(chunk)
+            time.sleep(0.01)
 
         self.write(MP_CONSTS.EOT_HEX)
 
@@ -118,17 +128,9 @@ class SerialTTY:
         self.write(MP_CONSTS.RAW_PASTE_MODE_HEX)
         self.read_until(b">R")
 
-        flow_control_window_size = self.read(2)
+        write_response = self.read(4)
 
-        if not flow_control_window_size:
-            raise Exception("can't read flow control window size")
-
-        flow_control_window_size = int.from_bytes(
-            flow_control_window_size, byteorder="little")
-
-        success_response = self.read(2)
-
-        if not success_response or not success_response.endswith(MP_CONSTS.SUCCESS_RESPONSE_END_HEX):
+        if not write_response or not write_response.endswith(MP_CONSTS.SUCCESS_RESPONSE_END_HEX):
             raise Exception("failed to enter raw REPL")
 
         self.__logger.info("entered raw repl")
