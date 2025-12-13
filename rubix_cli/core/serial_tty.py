@@ -22,7 +22,7 @@ class SerialTTY:
         self.__setup_interface()
 
     def __get_logger(self):
-        l = Logger(logger_name="rubix-cli")
+        l = Logger(logger_name="rubix-cli-serial")
         l.init()
 
         return l
