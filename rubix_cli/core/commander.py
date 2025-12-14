@@ -74,12 +74,19 @@ class Commander:
             """
 
             data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
 
-            if errors:
-                self.__logger.exception(errors)
-                return
+    def rm(self, path: str):
+        self.__logger.info(f"rm '{path}'")
 
-            self.__logger.info(data)
+        with self.__tty_session() as session:
+            cmd = f"""
+                import uos
+                uos.remove("{path}")
+            """
+
+            data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
 
     def rmdir(self, path: str):
         self.__logger.info(f"rmdir '{path}'")
@@ -88,13 +95,37 @@ class Commander:
             cmd = f"""
                 import uos
 
-                def file_exists(path):
-                    try:
-                        uos.stat(path)
+                def rmdir(path):
+                    uos.chdir(path)
 
-                        return True
-                    except OSError:
-                        return False
+                    for file in uos.listdir():
+                        try:
+                            uos.remove(file)
+                            print("removed " + file)
+                        except OSError:
+                            pass
+                            
+                    for dir in uos.listdir():
+                        rmdir(dir)
+                        print("removed " + dir)
+
+                    uos.chdir("..")
+                    uos.rmdir(path)
+
+                    print("removed " + path)
+
+                rmdir("{path}")
+            """
+
+            data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
+
+    def purge(self):
+        self.__logger.info(f"purge")
+
+        with self.__tty_session() as session:
+            cmd = f"""
+                import uos
 
                 def rmdir(path):
                     uos.chdir(path)
@@ -102,25 +133,34 @@ class Commander:
                     for file in uos.listdir():
                         try:
                             uos.remove(file)
+                            print("removed " + file)
                         except OSError:
                             pass
                             
                     for dir in uos.listdir():
                         rmdir(dir)
+                        print("removed " + dir)
 
                     uos.chdir("..")
-                    os.rmdir("{path}")
+                    uos.rmdir(path)
 
-                if not file_exists("{path}"):
-                    print("{path} doesn't exist")
-                else:
-                    rmdir("{path}")
+                    print("removed " + path)
+
+                for file in uos.listdir():
+                    rmdir(file)
             """
 
             data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
 
-            if errors:
-                self.__logger.exception(errors)
-                return
+    def mkdir(self, path: str):
+        self.__logger.info(f"mkdir '{path}'")
 
-            self.__logger.info(data)
+        with self.__tty_session() as session:
+            cmd = f"""
+                import uos
+                uos.mkdir("{path}")
+            """
+
+            data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)

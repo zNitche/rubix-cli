@@ -16,21 +16,35 @@ class CLI:
         for key, val in inspect_data.items():
             args[key] = val.annotation.__name__
 
-        return args
+        return None if len(args.keys()) == 0 else args
 
     def __get_commands(self):
         commands = {
             "ls": {
                 "description": "",
                 "func": self.__commander.ls,
-                "args": self.__get_func_args(self.__commander.ls)
+            },
+            "rm": {
+                "description": "",
+                "func": self.__commander.rm,
             },
             "rmdir": {
                 "description": "",
                 "func": self.__commander.rmdir,
-                "args": self.__get_func_args(self.__commander.rmdir)
+            },
+            "mkdir": {
+                "description": "",
+                "func": self.__commander.mkdir,
+            },
+            "purge": {
+                "description": "",
+                "func": self.__commander.purge,
             }
         }
+
+        for cmd in commands:
+            cmd_data = commands[cmd]
+            cmd_data["args"] = self.__get_func_args(cmd_data["func"])
 
         return commands
 
