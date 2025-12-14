@@ -73,14 +73,18 @@ class CLI:
 
 def main(args: argparse.Namespace):
     interface = args.device
+    debug = args.debug
+    timeout = args.timeout
+    baudrate = args.baudrate
+    write_buffer_size = args.write_buffer_size
 
     cmd = args.cmd
     cmd_args = args.cmd_args
 
     show_commands = args.commands
-    debug = args.debug
 
-    commander = Commander(interface=interface, debug=debug)
+    commander = Commander(interface=interface, debug=debug, timeout=timeout,
+                          baudrate=baudrate, write_buffer_size=write_buffer_size)
     cli = CLI(commander=commander)
 
     if show_commands:
@@ -98,6 +102,15 @@ def get_args():
 
     argument_parser.add_argument(
         "--device", type=str, help="example, /dev/tty1", required=False)
+
+    argument_parser.add_argument(
+        "--timeout", type=int, default=2, required=False)
+
+    argument_parser.add_argument(
+        "--baudrate", type=int, default=115200, required=False)
+
+    argument_parser.add_argument(
+        "--write-buffer-size", type=int, default=128, required=False)
 
     argument_parser.add_argument(
         '--cmd', help='command name, for example ls /', required=False)

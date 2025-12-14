@@ -6,18 +6,30 @@ from rubix_cli.core.utils import Logger
 
 
 class Commander:
-    def __init__(self, interface: str | None, debug: bool = False):
-        self.__serial = SerialTTY(
-            interface=interface, debug=debug) if interface else None
+    def __init__(self, interface: str | None, debug: bool = False,
+                 timeout: int = 2, baudrate: int = 115200,
+                 write_buffer_size: int = 128):
+
+        self.__serial = self.__setup_serial_tty(interface, debug, timeout,
+                                                baudrate, write_buffer_size)
 
         self.__logger = Logger(logger_name="rubix-cli")
         self.__logger.init(debug=debug)
+
+    def __setup_serial_tty(self, interface: str | None, debug: bool, timeout: int,
+                           baudrate: int, write_buffer_size: int):
+        if not interface:
+            return None
+
+        return SerialTTY(
+            interface=interface, debug=debug, timeout=timeout,
+            baudrate=baudrate, write_buffer_size=write_buffer_size)
 
     @contextmanager
     def __tty_session(self):
         if self.__serial is None:
             raise Exception("interface has not been specified")
-        
+
         self.__serial.soft_reboot()
         self.__serial.enter_raw_repl()
 
