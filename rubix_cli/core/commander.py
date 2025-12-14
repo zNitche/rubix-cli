@@ -47,6 +47,13 @@ class Commander:
 
         return response, errors
 
+    def __handle_command_response(self, response: str, errors: str | None):
+        if errors:
+            self.__logger.exception(errors)
+            return
+
+        self.__logger.info(response)
+
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
