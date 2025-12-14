@@ -1,6 +1,8 @@
 import argparse
 import inspect
 from rubix_cli.core import Commander
+from rubix_cli.core.consts import TERM_COLORS
+from rubix_cli.core import common_utils
 
 
 class CLI:
@@ -52,7 +54,7 @@ class CLI:
         for command_name in self.__commands:
             cmd_details = self.__commands[command_name]
 
-            print(f"### {command_name}")
+            common_utils.print_color(f"### {command_name}", TERM_COLORS.GREEN)
             print(f"args: {cmd_details['args']}")
 
             description = cmd_details.get("description")

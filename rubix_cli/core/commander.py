@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 import textwrap
-from rubix_cli.core import SerialTTY, MP_CONSTS
+from rubix_cli.core import SerialTTY
+from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
 
 
