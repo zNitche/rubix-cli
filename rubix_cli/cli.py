@@ -97,7 +97,7 @@ def get_args():
     argument_parser = argparse.ArgumentParser()
 
     argument_parser.add_argument(
-        "--device", type=str, help="example, /dev/tty1", required=True)
+        "--device", type=str, help="example, /dev/tty1", required=False)
 
     argument_parser.add_argument(
         '--cmd', help='command name, for example ls /', required=False)

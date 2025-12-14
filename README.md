@@ -7,6 +7,10 @@ pip3 install -e .
 ```
 
 ```
+rubix-cli --commands
+```
+
+```
 rubix-cli --device /dev/tty1 --cmd ls /test
 ```
 
