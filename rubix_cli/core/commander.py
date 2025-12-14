@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
-from rubix_cli.core import snippets
+from rubix_cli import snippets
 
 
 class Commander:

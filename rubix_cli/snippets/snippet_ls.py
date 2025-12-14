@@ -1,4 +1,4 @@
-from rubix_cli.core.snippets import SnippetBase
+from rubix_cli.snippets import SnippetBase
 
 
 class SnippetLS(SnippetBase):
