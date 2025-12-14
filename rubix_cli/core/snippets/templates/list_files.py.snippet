@@ -1,0 +1,12 @@
+import uos
+
+for file in uos.listdir('{path}'):
+    path = '{path}' + '/' + file
+    stats = uos.stat(path)
+
+    st_size = str(stats[6])
+    st_ctime = str(stats[9])
+
+    row = st_size + " " + st_ctime + " " + path
+
+    print(row)

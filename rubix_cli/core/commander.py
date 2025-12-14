@@ -1,8 +1,8 @@
 from contextlib import contextmanager
-import textwrap
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
+from rubix_cli.core import snippets
 
 
 class Commander:
@@ -56,7 +56,6 @@ class Commander:
     def __send_command(self, cmd: str, serial_session: SerialTTY):
         self.__logger.debug(f"sending: {cmd}")
 
-        cmd = textwrap.dedent(cmd)
         raw_response, raw_error = serial_session.send_command(data=cmd)
 
         response = self.__parse_command_response(raw_response)
@@ -75,20 +74,7 @@ class Commander:
         self.__logger.info(f"ls at '{path}'")
 
         with self.__tty_session() as session:
-            cmd = f"""
-                import uos
-
-                for file in uos.listdir('{path}'):
-                    path = '{path}' + '/' + file
-                    stats = uos.stat(path)
-
-                    st_size = str(stats[6])
-                    st_ctime = str(stats[9])
-
-                    row = st_size + " " + st_ctime + " " + path
-
-                    print(row)
-            """
+            cmd = snippets.SnippetLS().get_code({"path": path})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
