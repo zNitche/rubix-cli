@@ -30,7 +30,7 @@ class SnippetBase:
         subs_tags = self.__find_tags(snippet, "mod")
 
         for tag in subs_tags:
-            sub_name = tag['content']
+            sub_name = tag['value']
             sub_snippet_path = os.path.join(
                 subs_path, f"{sub_name}.py-snippet")
 
