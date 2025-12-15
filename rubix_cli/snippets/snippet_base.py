@@ -8,22 +8,39 @@ class SnippetBase:
         self.__root_path = os.path.dirname(os.path.abspath(__file__))
         self.__snippets_path = os.path.join(self.__root_path, "templates")
 
+    def __find_tags(self, snippet: str, tag_name: str):
+        tags_in_snippet = re.findall(
+            rf"<{tag_name}>(.*)</{tag_name}>", snippet)
+        tags = []
+
+        for tag_value in tags_in_snippet:
+            item = {
+                "tag_name": tag_name,
+                "value": tag_value,
+                "tag": f"<{tag_name}>{tag_value}</{tag_name}>"
+            }
+
+            tags.append(item)
+
+        return tags
+
     def __inject_sub_snippet(self, snippet: str):
         subs_path = os.path.join(self.__snippets_path, "common")
 
-        subs = re.findall(r"<mod>(.*)</mod>", snippet)
+        subs_tags = self.__find_tags(snippet, "mod")
 
-        for sub_name in subs:
-            tag = f"<mod>{sub_name}</mod>"
-            sub_snippet_path = os.path.join(subs_path, f"{sub_name}.py-snippet")
+        for tag in subs_tags:
+            sub_name = tag['content']
+            sub_snippet_path = os.path.join(
+                subs_path, f"{sub_name}.py-snippet")
 
             if not os.path.exists(sub_snippet_path):
                 raise Exception(f"sub snippet '{sub_name}' doesn't exist")
-            
+
             with open(sub_snippet_path, "r") as file:
                 sub_content = file.read()
 
-            snippet = snippet.replace(tag, sub_content)
+            snippet = snippet.replace(tag['tag'], sub_content)
 
         return snippet
 
