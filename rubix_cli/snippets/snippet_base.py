@@ -43,6 +43,14 @@ class SnippetBase:
             snippet = snippet.replace(tag['tag'], sub_content)
 
         return snippet
+    
+    def __remove_comments(self, snippet: str):
+        subs_tags = self.__find_tags(snippet, "com")
+
+        for tag in subs_tags:
+            snippet = snippet.replace(tag['tag'], "")
+
+        return snippet
 
     def _load_snippet(self, name: str, **kwargs):
         file_path = os.path.join(self.__snippets_path, f"{name}.py-snippet")
@@ -54,6 +62,8 @@ class SnippetBase:
             snippet_content = file.read()
 
         snippet_content = self.__inject_sub_snippet(snippet_content)
+        snippet_content = self.__remove_comments(snippet_content)
+
         snippet_content = snippet_content.format(**kwargs)
 
         return textwrap.dedent(snippet_content)

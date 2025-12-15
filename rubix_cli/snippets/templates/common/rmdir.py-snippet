@@ -1,3 +1,6 @@
+<com>parent snippet has to import uos module</com>
+
+
 def rmdir(path):
     uos.chdir(path)
 
