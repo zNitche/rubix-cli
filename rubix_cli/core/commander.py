@@ -75,7 +75,7 @@ class Commander:
         self.__logger.info(f"ls at '{path}'")
 
         with self.__tty_session() as session:
-            cmd = snippets.SnippetLS().get_code({"path": path})
+            cmd = snippets.SnippetLs().get_code({"path": path})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
@@ -84,10 +84,7 @@ class Commander:
         self.__logger.info(f"rm '{path}'")
 
         with self.__tty_session() as session:
-            cmd = f"""
-                import uos
-                uos.remove("{path}")
-            """
+            cmd = snippets.SnippetRm().get_code({"path": path})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
@@ -161,10 +158,7 @@ class Commander:
         self.__logger.info(f"mkdir '{path}'")
 
         with self.__tty_session() as session:
-            cmd = f"""
-                import uos
-                uos.mkdir("{path}")
-            """
+            cmd = snippets.SnippetMkDir().get_code({"path": path})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)

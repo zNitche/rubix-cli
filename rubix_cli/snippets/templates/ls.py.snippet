@@ -1,0 +1,18 @@
+import uos
+
+files = uos.listdir('{path}')
+
+if len(files) == 0:
+    print("No files at '{path}'")
+
+else:
+    for file in files:
+        path = '{path}' + '/' + file
+        stats = uos.stat(path)
+
+        st_size = str(stats[6])
+        st_ctime = str(stats[9])
+
+        row = st_size + " " + st_ctime + " " + path
+
+        print(row)
