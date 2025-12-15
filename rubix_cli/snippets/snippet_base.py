@@ -15,7 +15,7 @@ class SnippetBase:
 
         for sub_name in subs:
             tag = f"<mod>{sub_name}</mod>"
-            sub_snippet_path = os.path.join(subs_path, f"{sub_name}.py.snippet")
+            sub_snippet_path = os.path.join(subs_path, f"{sub_name}.py-snippet")
 
             if not os.path.exists(sub_snippet_path):
                 raise Exception(f"sub snippet '{sub_name}' doesn't exist")
@@ -28,7 +28,7 @@ class SnippetBase:
         return snippet
 
     def _load_snippet(self, name: str, **kwargs):
-        file_path = os.path.join(self.__snippets_path, f"{name}.py.snippet")
+        file_path = os.path.join(self.__snippets_path, f"{name}.py-snippet")
 
         if not os.path.exists(file_path):
             raise Exception(f"snippet '{name}' doesn't exist")
