@@ -67,8 +67,9 @@ class Commander:
         if errors:
             self.__logger.exception(errors)
             return
-
-        self.__logger.info(response)
+        
+        res = "OK" if not response else response
+        self.__logger.info(res)
 
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
