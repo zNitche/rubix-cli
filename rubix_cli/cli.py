@@ -55,12 +55,21 @@ class CLI:
             cmd_details = self.__commands[command_name]
 
             common_utils.print_color(f"### {command_name}", TERM_COLORS.GREEN)
-            print(f"args: {cmd_details['args']}")
+
+            args = cmd_details['args']
+            args_count = len(args.keys()) if args else 0
+
+            if args_count > 0:
+                for arg_name in args:
+                    common_utils.print_color(
+                        f"\t{arg_name}: {args[arg_name]}", TERM_COLORS.MAGENTA)
 
             description = cmd_details.get("description")
 
             if description:
                 print(f"description: {description}")
+
+            print()
 
     def execute_command(self, command: str, *args):
         command_data = self.__commands.get(command)
