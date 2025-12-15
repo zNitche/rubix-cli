@@ -51,6 +51,20 @@ class SnippetBase:
             snippet = snippet.replace(tag['tag'], "")
 
         return snippet
+    
+    def __inject_variables(self, snippet: str, variables: dict[str, str]):
+        subs_tags = self.__find_tags(snippet, "var")
+
+        for tag in subs_tags:
+            variable_name = tag['value']
+            var = variables.get(variable_name)
+
+            if var is None:
+                raise Exception(f"failed to inject '{variable_name}' into snippet")
+
+            snippet = snippet.replace(tag['tag'], var)
+
+        return snippet
 
     def _load_snippet(self, name: str, **kwargs):
         file_path = os.path.join(self.__snippets_path, f"{name}.py-snippet")
@@ -64,7 +78,7 @@ class SnippetBase:
         snippet_content = self.__inject_sub_snippet(snippet_content)
         snippet_content = self.__remove_comments(snippet_content)
 
-        snippet_content = snippet_content.format(**kwargs)
+        snippet_content = self.__inject_variables(snippet_content, variables=kwargs)
 
         return textwrap.dedent(snippet_content)
 

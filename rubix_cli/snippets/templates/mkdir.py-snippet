@@ -1,2 +1,2 @@
 import uos
-uos.mkdir("{path}")
+uos.mkdir("<var>path</var>")

@@ -2,4 +2,4 @@ import uos
 
 <mod>rmdir</mod>
 
-rmdir("{path}")
+rmdir("<var>path</var>")

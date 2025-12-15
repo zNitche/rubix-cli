@@ -1,18 +1,18 @@
 import uos
 
-files = uos.listdir('{path}')
+files = uos.listdir('<var>path</var>')
 
 if len(files) == 0:
-    print("No files at '{path}'")
+    print("No files at '<var>path</var>'")
 
 else:
     for file in files:
-        path = '{path}' + '/' + file
+        path = f'<var>path</var>/{file}'
         stats = uos.stat(path)
 
         st_size = str(stats[6])
         st_ctime = str(stats[9])
 
-        row = st_size + " " + st_ctime + " " + path
+        row = f'{st_size}" "{st_ctime}" " {path}'
 
         print(row)

@@ -1,2 +1,2 @@
 import uos
-uos.remove("{path}")
+uos.remove("<var>path</var>")
