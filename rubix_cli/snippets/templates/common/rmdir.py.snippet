@@ -1,0 +1,18 @@
+def rmdir(path):
+    uos.chdir(path)
+
+    for file in uos.listdir():
+        try:
+            uos.remove(file)
+            print("removed " + file)
+        except OSError:
+            pass
+            
+    for dir in uos.listdir():
+        rmdir(dir)
+        print("removed " + dir)
+
+    uos.chdir("..")
+    uos.rmdir(path)
+
+    print("removed " + path)
