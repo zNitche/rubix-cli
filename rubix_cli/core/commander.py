@@ -93,30 +93,7 @@ class Commander:
         self.__logger.info(f"rmdir '{path}'")
 
         with self.__tty_session() as session:
-            cmd = f"""
-                import uos
-
-                def rmdir(path):
-                    uos.chdir(path)
-
-                    for file in uos.listdir():
-                        try:
-                            uos.remove(file)
-                            print("removed " + file)
-                        except OSError:
-                            pass
-                            
-                    for dir in uos.listdir():
-                        rmdir(dir)
-                        print("removed " + dir)
-
-                    uos.chdir("..")
-                    uos.rmdir(path)
-
-                    print("removed " + path)
-
-                rmdir("{path}")
-            """
+            cmd = snippets.SnippetRmDir().get_code({"path": path})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
@@ -125,31 +102,7 @@ class Commander:
         self.__logger.info(f"purge")
 
         with self.__tty_session() as session:
-            cmd = f"""
-                import uos
-
-                def rmdir(path):
-                    uos.chdir(path)
-
-                    for file in uos.listdir():
-                        try:
-                            uos.remove(file)
-                            print("removed " + file)
-                        except OSError:
-                            pass
-                            
-                    for dir in uos.listdir():
-                        rmdir(dir)
-                        print("removed " + dir)
-
-                    uos.chdir("..")
-                    uos.rmdir(path)
-
-                    print("removed " + path)
-
-                for file in uos.listdir():
-                    rmdir(file)
-            """
+            cmd = snippets.SnippetPurge().get_code({})
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
