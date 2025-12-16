@@ -49,6 +49,10 @@ class CLI:
             "get_rtc": {
                 "description": "",
                 "func": self.__commander.get_rtc,
+            },
+            "uname": {
+                "description": "",
+                "func": self.__commander.uname,
             }
         }
 

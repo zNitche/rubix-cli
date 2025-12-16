@@ -124,3 +124,11 @@ class Commander:
 
         data, errors = self.__send_command(cmd)
         self.__handle_command_response(data, errors)
+
+    def uname(self):
+        self.__logger.info("uname")
+
+        cmd = snippets.SnippetUname().get_code()
+
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
