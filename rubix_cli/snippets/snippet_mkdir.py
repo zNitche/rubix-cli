@@ -2,5 +2,7 @@ from rubix_cli.snippets import SnippetBase
 
 
 class SnippetMkDir(SnippetBase):
-    def get_code(self, kwargs):
-        return self._load_snippet("mkdir", **kwargs)
+    def __init__(self):
+        super().__init__()
+
+        self.snippet_name = "mkdir"

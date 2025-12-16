@@ -8,6 +8,8 @@ class SnippetBase:
         self.__root_path = os.path.dirname(os.path.abspath(__file__))
         self.__snippets_path = os.path.join(self.__root_path, "templates")
 
+        self.snippet_name: str | None = None
+
     def __find_tags(self, snippet: str, tag_name: str):
         tags_in_snippet = re.findall(
             rf"<{tag_name}>(.*)</{tag_name}>", snippet)
@@ -43,7 +45,7 @@ class SnippetBase:
             snippet = snippet.replace(tag['tag'], sub_content)
 
         return snippet
-    
+
     def __remove_comments(self, snippet: str):
         subs_tags = self.__find_tags(snippet, "com")
 
@@ -51,7 +53,7 @@ class SnippetBase:
             snippet = snippet.replace(tag['tag'], "")
 
         return snippet
-    
+
     def __inject_variables(self, snippet: str, variables: dict[str, str]):
         subs_tags = self.__find_tags(snippet, "var")
 
@@ -60,27 +62,33 @@ class SnippetBase:
             var = variables.get(variable_name)
 
             if var is None:
-                raise Exception(f"failed to inject '{variable_name}' into snippet")
+                raise Exception(
+                    f"failed to inject '{variable_name}' into snippet")
 
             snippet = snippet.replace(tag['tag'], var)
 
         return snippet
 
     def _load_snippet(self, name: str, **kwargs):
-        file_path = os.path.join(self.__snippets_path, f"{name}.py-snippet")
+        snippet_path = os.path.join(
+            self.__snippets_path, f"{name}.py-snippet")
 
-        if not os.path.exists(file_path):
+        if not os.path.exists(snippet_path):
             raise Exception(f"snippet '{name}' doesn't exist")
 
-        with open(file_path, "r") as file:
+        with open(snippet_path, "r") as file:
             snippet_content = file.read()
 
         snippet_content = self.__inject_sub_snippet(snippet_content)
         snippet_content = self.__remove_comments(snippet_content)
 
-        snippet_content = self.__inject_variables(snippet_content, variables=kwargs)
+        snippet_content = self.__inject_variables(
+            snippet_content, variables=kwargs)
 
         return textwrap.dedent(snippet_content)
 
     def get_code(self, kwargs):
-        raise NotImplementedError()
+        if not self.snippet_name:
+            raise Exception("snippet name is not set")
+
+        return self._load_snippet(self.snippet_name, **kwargs)
