@@ -1,4 +1,3 @@
-from contextlib import contextmanager
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
@@ -25,22 +24,6 @@ class Commander:
             interface=interface, debug=debug, timeout=timeout,
             baudrate=baudrate, write_buffer_size=write_buffer_size)
 
-    @contextmanager
-    def __tty_session(self):
-        if self.__serial is None:
-            raise Exception("interface has not been specified")
-
-        self.__serial.soft_reboot()
-        self.__serial.enter_raw_repl()
-
-        try:
-            yield self.__serial
-
-        except:
-            self.__logger.exception("error while processing tty session")
-
-        self.__serial.exit_raw_repl()
-
     def __parse_command_response(self, response: bytes):
         decoded_response = response.decode()
 
@@ -53,10 +36,25 @@ class Commander:
 
         return decoded_response
 
-    def __send_command(self, cmd: str, serial_session: SerialTTY):
+    def __send_command(self, cmd: str):
         self.__logger.debug(f"sending: {cmd}")
 
-        raw_response, raw_error = serial_session.send_command(data=cmd)
+        if self.__serial is None:
+            raise Exception("interface has not been specified")
+        
+        raw_response = b""
+        raw_error = b""
+
+        self.__serial.soft_reboot()
+        self.__serial.enter_raw_repl()
+
+        try:
+            raw_response, raw_error = self.__serial.send_command(data=cmd)
+
+        except:
+            self.__logger.exception("error while processing tty session")
+
+        self.__serial.exit_raw_repl()
 
         response = self.__parse_command_response(raw_response)
         errors = self.__parse_command_response(raw_error)
@@ -67,69 +65,62 @@ class Commander:
         if errors:
             self.__logger.exception(errors)
             return
-        
+
         res = "OK" if not response else response
         self.__logger.info(res)
 
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetLs().get_code({"path": path})
+        cmd = snippets.SnippetLs().get_code({"path": path})
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def rm(self, path: str):
         self.__logger.info(f"rm '{path}'")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetRm().get_code({"path": path})
+        cmd = snippets.SnippetRm().get_code({"path": path})
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def rmdir(self, path: str):
         self.__logger.info(f"rmdir '{path}'")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetRmDir().get_code({"path": path})
+        cmd = snippets.SnippetRmDir().get_code({"path": path})
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def purge(self):
         self.__logger.info(f"purge")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetPurge().get_code({})
+        cmd = snippets.SnippetPurge().get_code({})
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def mkdir(self, path: str):
         self.__logger.info(f"mkdir '{path}'")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetMkDir().get_code({"path": path})
+        cmd = snippets.SnippetMkDir().get_code({"path": path})
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def set_rtc(self):
         self.__logger.info("setting rtc")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetSetRtc().get_code()
+        cmd = snippets.SnippetSetRtc().get_code()
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
 
     def get_rtc(self):
         self.__logger.info("getting rtc")
 
-        with self.__tty_session() as session:
-            cmd = snippets.SnippetGetRtc().get_code()
+        cmd = snippets.SnippetGetRtc().get_code()
 
-            data, errors = self.__send_command(cmd, session)
-            self.__handle_command_response(data, errors)
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
