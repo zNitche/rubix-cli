@@ -5,3 +5,5 @@ from rubix_cli.snippets.snippet_rm import SnippetRm
 from rubix_cli.snippets.snippet_mkdir import SnippetMkDir
 from rubix_cli.snippets.snippet_rmdir import SnippetRmDir
 from rubix_cli.snippets.snippet_purge import SnippetPurge
+from rubix_cli.snippets.snippet_set_rtc import SnippetSetRtc
+from rubix_cli.snippets.snippet_get_rtc import SnippetGetRtc

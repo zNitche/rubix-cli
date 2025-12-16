@@ -1,0 +1,9 @@
+import machine
+
+rtc = machine.RTC()
+time_tuple = rtc.datetime()
+
+names = ("year", "month", "day", "weekday", "hours", "minutes", "seconds", "subseconds")
+
+for i in range(len(time_tuple)):
+    print(f"{names[i]}: {time_tuple[i]}")

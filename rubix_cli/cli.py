@@ -41,6 +41,14 @@ class CLI:
             "purge": {
                 "description": "",
                 "func": self.__commander.purge,
+            },
+            "set_rtc": {
+                "description": "",
+                "func": self.__commander.set_rtc,
+            },
+            "get_rtc": {
+                "description": "",
+                "func": self.__commander.get_rtc,
             }
         }
 

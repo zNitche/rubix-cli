@@ -115,3 +115,21 @@ class Commander:
 
             data, errors = self.__send_command(cmd, session)
             self.__handle_command_response(data, errors)
+
+    def set_rtc(self):
+        self.__logger.info("setting rtc")
+
+        with self.__tty_session() as session:
+            cmd = snippets.SnippetSetRtc().get_code()
+
+            data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
+
+    def get_rtc(self):
+        self.__logger.info("getting rtc")
+
+        with self.__tty_session() as session:
+            cmd = snippets.SnippetGetRtc().get_code()
+
+            data, errors = self.__send_command(cmd, session)
+            self.__handle_command_response(data, errors)
