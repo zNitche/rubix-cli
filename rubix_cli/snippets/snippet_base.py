@@ -65,11 +65,11 @@ class SnippetBase:
                 raise Exception(
                     f"failed to inject '{variable_name}' into snippet")
 
-            snippet = snippet.replace(tag['tag'], var)
+            snippet = snippet.replace(tag['tag'], str(var))
 
         return snippet
 
-    def _load_snippet(self, name: str, **kwargs):
+    def _load_snippet(self, name: str, args: dict | None):
         snippet_path = os.path.join(
             self.__snippets_path, f"{name}.py-snippet")
 
@@ -82,13 +82,14 @@ class SnippetBase:
         snippet_content = self.__inject_sub_snippet(snippet_content)
         snippet_content = self.__remove_comments(snippet_content)
 
-        snippet_content = self.__inject_variables(
-            snippet_content, variables=kwargs)
+        if args is not None:
+            snippet_content = self.__inject_variables(
+                snippet_content, variables=args)
 
         return textwrap.dedent(snippet_content)
 
-    def get_code(self, kwargs):
+    def get_code(self, args: dict | None = None):
         if not self.snippet_name:
             raise Exception("snippet name is not set")
 
-        return self._load_snippet(self.snippet_name, **kwargs)
+        return self._load_snippet(self.snippet_name, args)
