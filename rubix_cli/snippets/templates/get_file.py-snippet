@@ -1,0 +1,5 @@
+import uos
+
+with open("<var>path</var>", "rb") as file:
+    for line in file.readline():
+        print(line.decode())

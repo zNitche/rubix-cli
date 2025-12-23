@@ -1,0 +1,4 @@
+import uos
+
+with open("<var>file_path</var>", "wb") as file:
+    file.write(<var>file_content</var>)

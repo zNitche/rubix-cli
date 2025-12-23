@@ -8,3 +8,5 @@ from rubix_cli.snippets.snippet_purge import SnippetPurge
 from rubix_cli.snippets.snippet_set_rtc import SnippetSetRtc
 from rubix_cli.snippets.snippet_get_rtc import SnippetGetRtc
 from rubix_cli.snippets.snippet_uname import SnippetUname
+from rubix_cli.snippets.snippet_flash_file import SnippetFlashFile
+from rubix_cli.snippets.snippet_get_file import SnippetGetFile
