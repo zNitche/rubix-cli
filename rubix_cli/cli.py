@@ -53,6 +53,14 @@ class CLI:
             "uname": {
                 "description": "",
                 "func": self.__commander.uname,
+            },
+            "flash": {
+                "description": "",
+                "func": self.__commander.flash,
+            },
+            "get_file": {
+                "description": "",
+                "func": self.__commander.get_file,
             }
         }
 

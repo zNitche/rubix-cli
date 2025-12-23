@@ -1,3 +1,4 @@
+import os
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
@@ -129,6 +130,29 @@ class Commander:
         self.__logger.info("uname")
 
         cmd = snippets.SnippetUname().get_code()
+
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
+
+    def flash(self, source_path: str, target_path: str):
+        self.__logger.info(f"flashing {source_path} -> {target_path}")
+
+        if not os.path.exists(source_path):
+            raise Exception(f"'{source_path}' doesn't exist")
+
+        with open(source_path, "rb") as file:
+            file_content = file.read()
+
+        cmd = snippets.SnippetFlashFile().get_code(
+            {"file_content": file_content, "file_path": target_path})
+
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
+
+    def get_file(self, path: str):
+        self.__logger.info("uname")
+
+        cmd = snippets.SnippetGetFile().get_code({"path": path})
 
         data, errors = self.__send_command(cmd)
         self.__handle_command_response(data, errors)
