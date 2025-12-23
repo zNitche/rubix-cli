@@ -50,6 +50,11 @@ class SerialTTY:
             self.__tty_fd,
             termios.TCSANOW,
             [iflag, oflag, cflag, lflag, ispeed, ospeed, cc])
+        
+    def __interrupt_current_run(self):
+        for _ in range(2):
+            self.write(MP_CONSTS.ETX_HEX)
+            time.sleep(0.5)
 
     def write(self, data: str | bytes):
         data = data if isinstance(
@@ -106,6 +111,8 @@ class SerialTTY:
         return response, errors
 
     def soft_reboot(self):
+        self.__interrupt_current_run()
+        
         self.write(MP_CONSTS.EOT_HEX)
         time.sleep(0.1)
 
@@ -117,9 +124,7 @@ class SerialTTY:
         self.__logger.debug("rebooted")
 
     def enter_raw_repl(self):
-        for _ in range(2):
-            self.write(MP_CONSTS.ETX_HEX)
-            time.sleep(0.5)
+        self.__interrupt_current_run()
 
         # enter raw repl
         self.write(MP_CONSTS.SOH_HEX)

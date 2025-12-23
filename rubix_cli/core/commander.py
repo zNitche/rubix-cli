@@ -41,7 +41,7 @@ class Commander:
 
         if self.__serial is None:
             raise Exception("interface has not been specified")
-        
+
         raw_response = b""
         raw_error = b""
 
