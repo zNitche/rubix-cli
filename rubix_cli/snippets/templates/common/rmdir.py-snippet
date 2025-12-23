@@ -1,21 +1,24 @@
 <com>parent snippet has to import uos module</com>
 
 
-def rmdir(path):
+def rmdir(path:str, remove_root=True):
     uos.chdir(path)
 
     for file in uos.listdir():
         try:
             uos.remove(file)
-            print("removed " + file)
+            print("removed file: " + file)
         except OSError:
             pass
             
     for dir in uos.listdir():
         rmdir(dir)
-        print("removed " + dir)
+        print("removed dir: " + dir)
 
-    uos.chdir("..")
-    uos.rmdir(path)
+    if path != "/":
+        uos.chdir("..")
 
-    print("removed " + path)
+        if remove_root:
+            uos.rmdir(path)
+
+            print("removed " + path)

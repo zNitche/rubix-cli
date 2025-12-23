@@ -2,5 +2,4 @@ import uos
 
 <mod>rmdir</mod>
 
-for file in uos.listdir():
-    rmdir(file)
+rmdir("/", False)
