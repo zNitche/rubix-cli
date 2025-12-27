@@ -37,7 +37,7 @@ class Commander:
 
         return decoded_response
 
-    def __send_command(self, cmd: str):
+    def __send_command(self, cmd: str, reboot: bool = True):
         self.__logger.debug(f"sending: {cmd}")
 
         if self.__serial is None:
@@ -46,33 +46,42 @@ class Commander:
         raw_response = b""
         raw_error = b""
 
-        self.__serial.soft_reboot()
-        self.__serial.enter_raw_repl()
+        if reboot:
+            self.__logger.debug(message="soft reboot")
+
+            self.__serial.soft_reboot()
+            self.__serial.enter_raw_repl()
 
         try:
             raw_response, raw_error = self.__serial.send_command(data=cmd)
 
-        except:
+        except Exception as e:
             self.__logger.exception("error while processing tty session")
+            raise e
 
-        self.__serial.exit_raw_repl()
+        if reboot:
+            self.__serial.exit_raw_repl()
 
         response = self.__parse_command_response(raw_response)
         errors = self.__parse_command_response(raw_error)
 
         return response, errors
 
-    def __handle_command_response(self, response: str, errors: str | None):
+    def __handle_command_response(self, response: str, errors: str | None, raise_exception_on_errors: bool = False):
         if errors:
             self.__logger.exception(errors)
+
+            if raise_exception_on_errors:
+                raise Exception("command returned some errors")
+
             return
 
         if response:
             self.__logger.info(response)
 
-    def __default_cmd_handler(self, cmd: str):
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+    def __default_cmd_handler(self, cmd: str, reboot: bool = True, raise_exception_on_errors: bool = False):
+        data, errors = self.__send_command(cmd, reboot=reboot)
+        self.__handle_command_response(data, errors, raise_exception_on_errors)
 
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")

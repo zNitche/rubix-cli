@@ -50,7 +50,7 @@ class SerialTTY:
             self.__tty_fd,
             termios.TCSANOW,
             [iflag, oflag, cflag, lflag, ispeed, ospeed, cc])
-        
+
     def __interrupt_current_run(self):
         for _ in range(2):
             self.write(MP_CONSTS.ETX_HEX)
@@ -72,15 +72,18 @@ class SerialTTY:
             return None
 
     def read_until(self, stop_at: bytes):
+        self.__logger.debug(f"reading untill {stop_at} ...")
         buff = b""
 
         while True:
             read_data = self.read(1)
+            self.__logger.debug(f"data: {read_data}")
 
             if read_data is None:
                 break
 
             buff += read_data
+            self.__logger.debug(message=f"buff: {buff}")
 
             if stop_at and buff.endswith(stop_at):
                 break
@@ -91,7 +94,8 @@ class SerialTTY:
         data_length = len(data)
 
         for chunk_start in range(0, data_length, self.__write_buffer_size):
-            chunk_offset = min(chunk_start + self.__write_buffer_size, data_length)
+            chunk_offset = min(
+                chunk_start + self.__write_buffer_size, data_length)
             chunk = data[chunk_start:chunk_offset]
 
             self.write(chunk)
@@ -100,6 +104,9 @@ class SerialTTY:
         self.write(MP_CONSTS.EOT_HEX)
 
         is_success = self.read_until(stop_at=MP_CONSTS.EOT_HEX)
+
+        if is_success is None:
+            raise Exception("response is None")
 
         if is_success.endswith(MP_CONSTS.EOT_HEX):
             self.__logger.debug(
@@ -112,7 +119,7 @@ class SerialTTY:
 
     def soft_reboot(self):
         self.__interrupt_current_run()
-        
+
         self.write(MP_CONSTS.EOT_HEX)
         time.sleep(0.1)
 
