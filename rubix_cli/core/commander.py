@@ -163,37 +163,28 @@ class Commander:
         cmd = filesystem_snippets.SnippetPurge().get_code()
         self.__default_cmd_handler(cmd)
 
-        self.__logger.info(message="purged, gathering data...")
+        flash_snippet = flash_snippets.SnippetFlash()
+        self.__logger.info(message="purged, flashing...")
 
-        target_struct = []
-        dirs_count = 0
-        files_count = 0
+        for (dirpath, dirnames, filenames) in os.walk(root_path):
+            root = dirpath.replace(root_path, "")
 
-        for (dirpath, dirnames, filenames) in os.walk(root_path):            
-            dirs_count += len(dirnames)
-            files_count += len(filenames)
+            for dirname in dirnames:
+                path = f"{root}/{dirname}"
+                self.__logger.info(message=f"creating {path} directory...")
 
-            level_struct = {
-                "root": dirpath.replace(root_path, ""),
-                "dirs": dirnames,
-                "files": []
-            }
+                cmd = flash_snippet.get_code(
+                    {"dirname": dirname, "filename": "", "file_content": b"", "path": path})
+                self.__default_cmd_handler(cmd, reboot=True, raise_exception_on_errors=True)
 
             for filename in filenames:
                 with open(os.path.join(dirpath, filename), "rb") as file:
                     content = file.read()
 
-                level_struct["files"].append({
-                    "name": filename,
-                    "content": content
-                })
+                path = f"{root}/{filename}"
+                self.__logger.info(message=f"flashing {path}...")
 
-            target_struct.append(level_struct)
-
-        self.__logger.info(
-            message=f"found {dirs_count} directories and {files_count} files")
-        
-        self.__logger.info(message="flashing...")
-
-        cmd = flash_snippets.SnippetFlash().get_code({"struct": target_struct})
-        self.__default_cmd_handler(cmd)
+                cmd = flash_snippet.get_code(
+                    {"dirname": "", "filename": filename, "file_content": content, "path": path})
+                
+                self.__default_cmd_handler(cmd, reboot=True, raise_exception_on_errors=True)
