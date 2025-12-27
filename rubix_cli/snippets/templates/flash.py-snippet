@@ -1,0 +1,28 @@
+import uos
+
+def write_to_file(path, content):
+    print(f"writing {len(content)} bytes to {path}")
+
+    with open(path, "wb") as file:
+        file.write(content)
+
+    print(f"done.")
+
+
+def main():
+    for item in <var>struct</var>:
+        files = item["files"]
+        dirs = item["dirs"]
+        root = item["root"]
+
+        for dir in dirs:
+            uos.mkdir(dir)
+            print(f"created: {dir}")
+
+        for file in files:
+            name = file["name"]
+            content = file["content"]
+
+            write_to_file(name, content)
+
+main()

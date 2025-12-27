@@ -61,6 +61,10 @@ class CLI:
             "get_file": {
                 "description": "",
                 "func": self.__commander.get_file,
+            },
+            "flash": {
+                "description": "",
+                "func": self.__commander.flash,
             }
         }
 
@@ -89,7 +93,7 @@ class CLI:
             if description:
                 print(f"description: {description}")
 
-            print()
+            print("\n")
 
     def execute_command(self, command: str, *args):
         command_data = self.__commands.get(command)
