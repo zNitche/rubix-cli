@@ -134,8 +134,8 @@ class Commander:
         data, errors = self.__send_command(cmd)
         self.__handle_command_response(data, errors)
 
-    def flash(self, source_path: str, target_path: str):
-        self.__logger.info(f"flashing {source_path} -> {target_path}")
+    def upload_file(self, source_path: str, target_path: str):
+        self.__logger.info(f"uploading {source_path} -> {target_path}")
 
         if not os.path.exists(source_path):
             raise Exception(f"'{source_path}' doesn't exist")
@@ -143,7 +143,7 @@ class Commander:
         with open(source_path, "rb") as file:
             file_content = file.read()
 
-        cmd = snippets.SnippetFlashFile().get_code(
+        cmd = snippets.SnippetUploadFile().get_code(
             {"file_content": file_content, "file_path": target_path})
 
         data, errors = self.__send_command(cmd)

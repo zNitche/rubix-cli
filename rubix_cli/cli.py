@@ -54,9 +54,9 @@ class CLI:
                 "description": "",
                 "func": self.__commander.uname,
             },
-            "flash": {
+            "upload_file": {
                 "description": "",
-                "func": self.__commander.flash,
+                "func": self.__commander.upload_file,
             },
             "get_file": {
                 "description": "",
