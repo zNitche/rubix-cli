@@ -2,6 +2,20 @@ from datetime import datetime
 from rubix_cli.snippets import SnippetBase
 
 
+class SnippetUname(SnippetBase):
+    def __init__(self):
+        super().__init__()
+
+        self.snippet_name = "uname"
+
+
+class SnippetGetRtc(SnippetBase):
+    def __init__(self):
+        super().__init__()
+
+        self.snippet_name = "get_rtc"
+
+
 class SnippetSetRtc(SnippetBase):
     def __init__(self):
         super().__init__()

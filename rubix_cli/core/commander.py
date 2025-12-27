@@ -2,7 +2,7 @@ import os
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
-from rubix_cli import snippets
+from rubix_cli.snippets import filesystem_snippets, flash_snippets, system_snippets
 
 
 class Commander:
@@ -67,8 +67,7 @@ class Commander:
             self.__logger.exception(errors)
             return
 
-        res = "OK" if not response else response
-        self.__logger.info(res)
+        self.__logger.info(response)
 
     def __default_cmd_handler(self, cmd: str):
         data, errors = self.__send_command(cmd)
@@ -77,49 +76,49 @@ class Commander:
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
-        cmd = snippets.SnippetLs().get_code({"path": path})
+        cmd = filesystem_snippets.SnippetLs().get_code({"path": path})
         self.__default_cmd_handler(cmd)
 
     def rm(self, path: str):
         self.__logger.info(f"rm '{path}'")
 
-        cmd = snippets.SnippetRm().get_code({"path": path})
+        cmd = filesystem_snippets.SnippetRm().get_code({"path": path})
         self.__default_cmd_handler(cmd)
 
     def rmdir(self, path: str):
         self.__logger.info(f"rmdir '{path}'")
 
-        cmd = snippets.SnippetRmDir().get_code({"path": path})
+        cmd = filesystem_snippets.SnippetRmDir().get_code({"path": path})
         self.__default_cmd_handler(cmd)
 
     def purge(self):
         self.__logger.info(f"purge")
 
-        cmd = snippets.SnippetPurge().get_code({})
+        cmd = filesystem_snippets.SnippetPurge().get_code({})
         self.__default_cmd_handler(cmd)
 
     def mkdir(self, path: str):
         self.__logger.info(f"mkdir '{path}'")
 
-        cmd = snippets.SnippetMkDir().get_code({"path": path})
+        cmd = filesystem_snippets.SnippetMkDir().get_code({"path": path})
         self.__default_cmd_handler(cmd)
 
     def set_rtc(self):
         self.__logger.info("setting rtc")
 
-        cmd = snippets.SnippetSetRtc().get_code()
+        cmd = system_snippets.SnippetSetRtc().get_code()
         self.__default_cmd_handler(cmd)
 
     def get_rtc(self):
         self.__logger.info("getting rtc")
 
-        cmd = snippets.SnippetGetRtc().get_code()
+        cmd = system_snippets.SnippetGetRtc().get_code()
         self.__default_cmd_handler(cmd)
 
     def uname(self):
         self.__logger.info("uname")
 
-        cmd = snippets.SnippetUname().get_code()
+        cmd = system_snippets.SnippetUname().get_code()
         self.__default_cmd_handler(cmd)
 
     def upload_file(self, source_path: str, target_path: str):
@@ -131,7 +130,7 @@ class Commander:
         with open(source_path, "rb") as file:
             file_content = file.read()
 
-        cmd = snippets.SnippetUploadFile().get_code(
+        cmd = filesystem_snippets.SnippetUploadFile().get_code(
             {"file_content": file_content, "file_path": target_path})
 
         self.__default_cmd_handler(cmd)
@@ -139,6 +138,6 @@ class Commander:
     def get_file(self, path: str):
         self.__logger.info("uname")
 
-        cmd = snippets.SnippetGetFile().get_code({"path": path})
+        cmd = filesystem_snippets.SnippetGetFile().get_code({"path": path})
 
         self.__default_cmd_handler(cmd)
