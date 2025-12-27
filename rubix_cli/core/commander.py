@@ -70,69 +70,57 @@ class Commander:
         res = "OK" if not response else response
         self.__logger.info(res)
 
+    def __default_cmd_handler(self, cmd: str):
+        data, errors = self.__send_command(cmd)
+        self.__handle_command_response(data, errors)
+
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
         cmd = snippets.SnippetLs().get_code({"path": path})
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def rm(self, path: str):
         self.__logger.info(f"rm '{path}'")
 
         cmd = snippets.SnippetRm().get_code({"path": path})
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def rmdir(self, path: str):
         self.__logger.info(f"rmdir '{path}'")
 
         cmd = snippets.SnippetRmDir().get_code({"path": path})
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def purge(self):
         self.__logger.info(f"purge")
 
         cmd = snippets.SnippetPurge().get_code({})
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def mkdir(self, path: str):
         self.__logger.info(f"mkdir '{path}'")
 
         cmd = snippets.SnippetMkDir().get_code({"path": path})
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def set_rtc(self):
         self.__logger.info("setting rtc")
 
         cmd = snippets.SnippetSetRtc().get_code()
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def get_rtc(self):
         self.__logger.info("getting rtc")
 
         cmd = snippets.SnippetGetRtc().get_code()
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def uname(self):
         self.__logger.info("uname")
 
         cmd = snippets.SnippetUname().get_code()
-
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def upload_file(self, source_path: str, target_path: str):
         self.__logger.info(f"uploading {source_path} -> {target_path}")
@@ -146,13 +134,11 @@ class Commander:
         cmd = snippets.SnippetUploadFile().get_code(
             {"file_content": file_content, "file_path": target_path})
 
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
 
     def get_file(self, path: str):
         self.__logger.info("uname")
 
         cmd = snippets.SnippetGetFile().get_code({"path": path})
 
-        data, errors = self.__send_command(cmd)
-        self.__handle_command_response(data, errors)
+        self.__default_cmd_handler(cmd)
