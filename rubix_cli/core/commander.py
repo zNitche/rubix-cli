@@ -67,7 +67,8 @@ class Commander:
             self.__logger.exception(errors)
             return
 
-        self.__logger.info(response)
+        if response:
+            self.__logger.info(response)
 
     def __default_cmd_handler(self, cmd: str):
         data, errors = self.__send_command(cmd)
@@ -140,4 +141,50 @@ class Commander:
 
         cmd = filesystem_snippets.SnippetGetFile().get_code({"path": path})
 
+        self.__default_cmd_handler(cmd)
+
+    def flash(self, root_path: str):
+        self.__logger.info(f"flashing '{root_path}'")
+
+        if os.path.isfile(root_path):
+            raise Exception(f"{root_path} should point to directory")
+
+        self.__logger.info("purging...")
+
+        cmd = filesystem_snippets.SnippetPurge().get_code()
+        self.__default_cmd_handler(cmd)
+
+        self.__logger.info(message="purged, gathering data...")
+
+        target_struct = []
+        dirs_count = 0
+        files_count = 0
+
+        for (dirpath, dirnames, filenames) in os.walk(root_path):            
+            dirs_count += len(dirnames)
+            files_count += len(filenames)
+
+            level_struct = {
+                "root": dirpath.replace(root_path, ""),
+                "dirs": dirnames,
+                "files": []
+            }
+
+            for filename in filenames:
+                with open(os.path.join(dirpath, filename), "rb") as file:
+                    content = file.read()
+
+                level_struct["files"].append({
+                    "name": filename,
+                    "content": content
+                })
+
+            target_struct.append(level_struct)
+
+        self.__logger.info(
+            message=f"found {dirs_count} directories and {files_count} files")
+        
+        self.__logger.info(message="flashing...")
+
+        cmd = flash_snippets.SnippetFlash().get_code({"struct": target_struct})
         self.__default_cmd_handler(cmd)

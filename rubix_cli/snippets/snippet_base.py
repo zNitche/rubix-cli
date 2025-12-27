@@ -1,6 +1,7 @@
 import os
 import textwrap
 import re
+from typing import Any
 
 
 class SnippetBase:
@@ -54,7 +55,7 @@ class SnippetBase:
 
         return snippet
 
-    def __inject_variables(self, snippet: str, variables: dict[str, str]):
+    def __inject_variables(self, snippet: str, variables: dict[str, Any]):
         subs_tags = self.__find_tags(snippet, "var")
 
         for tag in subs_tags:
