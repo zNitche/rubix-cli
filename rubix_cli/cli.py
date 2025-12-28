@@ -1,5 +1,6 @@
 import argparse
 import inspect
+from rubix_cli import __version__
 from rubix_cli.core import Commander
 from rubix_cli.core.consts import TERM_COLORS
 from rubix_cli.core import common_utils
@@ -109,8 +110,11 @@ class CLI:
 
 
 def main(args: argparse.Namespace):
-    interface = args.device
+    show_version = args.version
     debug = args.debug
+
+    interface = args.device
+
     timeout = args.timeout
     baudrate = args.baudrate
     write_buffer_size = args.write_buffer_size
@@ -124,6 +128,10 @@ def main(args: argparse.Namespace):
                           baudrate=baudrate, write_buffer_size=write_buffer_size)
     cli = CLI(commander=commander)
 
+    if show_version:
+        print(f"v{__version__}")
+        return
+
     if show_commands:
         cli.list_commands()
         return
@@ -136,6 +144,9 @@ def main(args: argparse.Namespace):
 
 def get_args():
     argument_parser = argparse.ArgumentParser()
+
+    argument_parser.add_argument("--version", action=argparse.BooleanOptionalAction,
+                                 default=False, required=False)
 
     argument_parser.add_argument(
         "--device", type=str, help="example, /dev/tty1", required=False)
