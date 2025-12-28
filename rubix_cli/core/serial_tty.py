@@ -7,7 +7,7 @@ from rubix_cli.core.consts import MP_CONSTS
 
 
 class SerialTTY:
-    def __init__(self, interface: str, baudrate: int = 115200, timeout: int = 2,
+    def __init__(self, interface: str, baudrate: int = 115200, timeout: float = 1.0,
                  write_buffer_size: int = 128, debug: bool = False):
 
         self.__interface = interface

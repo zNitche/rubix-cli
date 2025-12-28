@@ -137,7 +137,7 @@ def get_args():
         "--device", type=str, help="example, /dev/tty1", required=False)
 
     argument_parser.add_argument(
-        "--timeout", type=int, default=2, required=False)
+        "--timeout", type=float, default=1.0, required=False)
 
     argument_parser.add_argument(
         "--baudrate", type=int, default=115200, required=False)

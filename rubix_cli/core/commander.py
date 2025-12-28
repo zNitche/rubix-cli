@@ -7,7 +7,7 @@ from rubix_cli.snippets import filesystem_snippets, flash_snippets, system_snipp
 
 class Commander:
     def __init__(self, interface: str | None, debug: bool = False,
-                 timeout: int = 2, baudrate: int = 115200,
+                 timeout: float = 1.0, baudrate: int = 115200,
                  write_buffer_size: int = 128):
 
         self.__serial = self.__setup_serial_tty(interface, debug, timeout,
@@ -16,7 +16,7 @@ class Commander:
         self.__logger = Logger(logger_name="rubix-cli")
         self.__logger.init(debug=debug)
 
-    def __setup_serial_tty(self, interface: str | None, debug: bool, timeout: int,
+    def __setup_serial_tty(self, interface: str | None, debug: bool, timeout: float,
                            baudrate: int, write_buffer_size: int):
         if not interface:
             return None
