@@ -22,6 +22,10 @@ class CLI:
 
     def __get_commands(self):
         commands = {
+            "reboot": {
+                "description": "",
+                "func": self.__commander.soft_reboot,
+            },
             "ls": {
                 "description": "",
                 "func": self.__commander.ls,

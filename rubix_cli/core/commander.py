@@ -82,6 +82,12 @@ class Commander:
         data, errors = self.__send_command(cmd, reboot=reboot)
         self.__handle_command_response(data, errors, raise_exception_on_errors)
 
+    def soft_reboot(self):
+        if self.__serial is None:
+            raise Exception("interface has not been specified")
+
+        self.__serial.soft_reboot()
+
     def ls(self, path: str = "/"):
         self.__logger.info(f"ls at '{path}'")
 
