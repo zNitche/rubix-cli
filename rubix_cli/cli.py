@@ -23,6 +23,10 @@ class CLI:
 
     def __get_commands(self):
         commands = {
+            "l_repl": {
+                "description": "",
+                "func": self.__commander.listen_on_repl,
+            },
             "reboot": {
                 "description": "",
                 "func": self.__commander.soft_reboot,

@@ -1,4 +1,5 @@
 import os
+import time
 from rubix_cli.core import SerialTTY
 from rubix_cli.core.consts import MP_CONSTS
 from rubix_cli.core.utils import Logger
@@ -59,7 +60,7 @@ class Commander:
             self.__logger.exception("error while processing tty session")
             raise e
 
-        self.__serial.exit_raw_repl()
+        self.__serial.exit_repl()
 
         response = self.__parse_command_response(raw_response)
         errors = self.__parse_command_response(raw_error)
@@ -81,6 +82,29 @@ class Commander:
     def __default_cmd_handler(self, cmd: str, reboot: bool = True, raise_exception_on_errors: bool = False):
         data, errors = self.__send_command(cmd, reboot=reboot)
         self.__handle_command_response(data, errors, raise_exception_on_errors)
+
+    def listen_on_repl(self):
+        if self.__serial is None:
+            raise Exception("interface has not been specified")
+
+        try:
+            self.soft_reboot()
+            self.__serial.enter_repl()
+
+            time.sleep(0.1)
+            self.soft_reboot()
+
+            while True:
+                read_data = self.__serial.read(128, timeout=None)
+
+                if read_data is None:
+                    break
+
+                print(read_data.decode(), end="")
+
+        except KeyboardInterrupt:
+            self.__serial.exit_repl()
+            self.__logger.info("exiting repl")
 
     def soft_reboot(self):
         if self.__serial is None:
