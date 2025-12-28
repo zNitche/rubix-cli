@@ -6,7 +6,7 @@ class MP_CONSTS:
     SOH_HEX = b"\x01"
 
     RAW_PASTE_MODE_HEX = b"\x05A\x01"
-    SUCCESS_RESPONSE_END_HEX = b"\x00\x01"
+    SUCCESS_RESPONSE_END_HEX = b"\x01"
 
     # text
     SOFT_REBOOT = b"soft reboot\r\n"

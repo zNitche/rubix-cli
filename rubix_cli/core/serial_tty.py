@@ -54,7 +54,7 @@ class SerialTTY:
     def __interrupt_current_run(self):
         for _ in range(2):
             self.write(MP_CONSTS.ETX_HEX)
-            time.sleep(0.5)
+            time.sleep(0.01)
 
     def write(self, data: str | bytes):
         data = data if isinstance(
@@ -77,16 +77,16 @@ class SerialTTY:
 
         while True:
             read_data = self.read(1)
-            self.__logger.debug(f"data: {read_data}")
 
             if read_data is None:
                 break
 
             buff += read_data
-            self.__logger.debug(message=f"buff: {buff}")
 
             if stop_at and buff.endswith(stop_at):
                 break
+        
+        self.__logger.debug(message=f"buff: {buff}")
 
         return buff
 
@@ -135,6 +135,7 @@ class SerialTTY:
 
         # enter raw repl
         self.write(MP_CONSTS.SOH_HEX)
+        time.sleep(0.1)
 
         # enter raw-paste mode
         self.write(MP_CONSTS.RAW_PASTE_MODE_HEX)
