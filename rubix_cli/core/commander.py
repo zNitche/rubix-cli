@@ -48,9 +48,9 @@ class Commander:
 
         if reboot:
             self.__logger.debug(message="soft reboot")
-
             self.__serial.soft_reboot()
-            self.__serial.enter_raw_repl()
+
+        self.__serial.enter_raw_repl()
 
         try:
             raw_response, raw_error = self.__serial.send_command(data=cmd)
@@ -59,8 +59,7 @@ class Commander:
             self.__logger.exception("error while processing tty session")
             raise e
 
-        if reboot:
-            self.__serial.exit_raw_repl()
+        self.__serial.exit_raw_repl()
 
         response = self.__parse_command_response(raw_response)
         errors = self.__parse_command_response(raw_error)
