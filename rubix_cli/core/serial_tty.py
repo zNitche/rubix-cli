@@ -62,8 +62,11 @@ class SerialTTY:
 
         os.write(self.__tty_fd, data)
 
-    def read(self, bytes_to_read: int):
-        ready = select.select([self.__tty_fd], [], [], self.__timeout)
+    def read(self, bytes_to_read: int, timeout: float | None = -1):
+        if timeout == -1:
+            timeout = self.__timeout
+
+        ready = select.select([self.__tty_fd], [], [], timeout)
 
         if ready[0]:
             return os.read(self.__tty_fd, bytes_to_read)
@@ -130,11 +133,14 @@ class SerialTTY:
 
         self.__logger.debug("rebooted")
 
+    def enter_repl(self):
+        self.__interrupt_current_run()
+        self.write(MP_CONSTS.STX_HEX)
+
     def enter_raw_repl(self):
         self.__interrupt_current_run()
-
-        # enter raw repl
         self.write(MP_CONSTS.SOH_HEX)
+
         time.sleep(0.1)
 
         # enter raw-paste mode
@@ -148,7 +154,7 @@ class SerialTTY:
 
         self.__logger.debug("entered raw repl")
 
-    def exit_raw_repl(self):
+    def exit_repl(self):
         self.write(b"\r\x02")
 
         self.__logger.debug("exit from raw repl")
