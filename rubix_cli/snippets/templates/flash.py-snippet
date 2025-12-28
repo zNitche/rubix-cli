@@ -5,7 +5,6 @@ path = "<var>path</var>"
 
 dirname = "<var>dirname</var>"
 filename = "<var>filename</var>"
-file_content = <var>file_content</var>
 
 if dirname:
     uos.mkdir(path)
@@ -13,6 +12,6 @@ if dirname:
 
 else:
     with open(path, "wb") as file:
-        file.write(file_content)
+        file.write(<var>file_content</var>)
 
     print(f"created: {path}")

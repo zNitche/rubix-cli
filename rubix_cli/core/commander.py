@@ -168,6 +168,8 @@ class Commander:
         cmd = filesystem_snippets.SnippetPurge().get_code()
         self.__default_cmd_handler(cmd)
 
+        self.soft_reboot()
+
         flash_snippet = flash_snippets.SnippetFlash()
         self.__logger.info(message="purged, flashing...")
 
@@ -179,8 +181,9 @@ class Commander:
                 self.__logger.info(message=f"creating {path} directory...")
 
                 cmd = flash_snippet.get_code(
-                    {"dirname": dirname, "filename": "", "file_content": b"", "path": path})
-                self.__default_cmd_handler(cmd, reboot=True, raise_exception_on_errors=True)
+                    {"dirname": dirname, "path": path})
+                self.__default_cmd_handler(
+                    cmd, reboot=False, raise_exception_on_errors=True)
 
             for filename in filenames:
                 with open(os.path.join(dirpath, filename), "rb") as file:
@@ -190,6 +193,7 @@ class Commander:
                 self.__logger.info(message=f"flashing {path}...")
 
                 cmd = flash_snippet.get_code(
-                    {"dirname": "", "filename": filename, "file_content": content, "path": path})
-                
-                self.__default_cmd_handler(cmd, reboot=True, raise_exception_on_errors=True)
+                    {"filename": filename, "file_content": content, "path": path})
+
+                self.__default_cmd_handler(
+                    cmd, reboot=False, raise_exception_on_errors=True)
