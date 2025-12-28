@@ -1,18 +1,39 @@
 import uos
+import time
 
-files = uos.listdir('<var>path</var>')
+<mod>file_exists</mod>
+<mod>is_directory</mod>
+<mod>time_to_iso</mod>
 
-if len(files) == 0:
-    print("No files at '<var>path</var>'")
+path = "<var>path</var>"
+
+if not file_exists(path):
+    print(f"'{path}'' doesn't exist")
 
 else:
-    for file in files:
-        path = f'<var>path</var>/{file}'
-        stats = uos.stat(path)
+    files = uos.listdir(path)
 
-        st_size = str(stats[6])
-        st_ctime = str(stats[9])
+    if len(files) == 0:
+        print(f"No files at {path}")
 
-        row = f'{st_size}" "{st_ctime}" " {path}'
+    else:
+        print("\n")
 
-        print(row)
+        for file in files:
+            f_path = file if path == "/" else f"{path}/{file}"
+            stats = uos.stat(f_path)
+
+            st_size = stats[6]
+            st_ctime = time.gmtime(stats[9])
+
+            row = ""
+
+            if not is_directory(file):
+                row += f'[{st_size} bytes] [{time_to_iso(st_ctime)} ctime] '
+            
+            else:
+                row += "[directory] "
+
+            row += f'{f_path}'
+
+            print(row)
