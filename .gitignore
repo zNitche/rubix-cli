@@ -1,5 +1,7 @@
 .idea
 __pycache__
+.pytest_cache/
+
 rubix_cli.egg-info/
 
 .DS_Store

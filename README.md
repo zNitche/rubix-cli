@@ -14,6 +14,11 @@ rubix-cli --commands
 rubix-cli --device /dev/tty1 --cmd ls /test
 ```
 
+```
+pip3 install -r requirements/tests.txt
+pytest -v ./tests
+```
+
 
 ### Resources
 - [docs.micropython.org](https://docs.micropython.org/en/latest/reference/repl.html)
