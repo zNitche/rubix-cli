@@ -1,0 +1,10 @@
+<com>parent snippet has to import uos module</com>
+
+
+def is_directory(path: str) -> bool:
+    try:
+        uos.listdir(path)
+
+        return True
+    except OSError:
+        return False

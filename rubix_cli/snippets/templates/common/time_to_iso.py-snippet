@@ -1,0 +1,15 @@
+def pad_to_two(val: int):
+    if val < 10:
+        return f"0{val}"
+
+    return str(val)    
+
+
+def time_to_iso(date: tuple[int]) -> str:
+    if len(date) != 8:
+        raise Exception(f"wrong size of date tuple, expected 8 got {len(tuple)}")
+
+    date = [pad_to_two(val) for val in date] 
+
+    return f"{date[0]}-{date[1]}-{date[2]}T{date[3]}:{date[4]}:{date[5]}"
+    
