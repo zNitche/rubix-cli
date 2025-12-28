@@ -60,11 +60,7 @@ class SnippetBase:
 
         for tag in subs_tags:
             variable_name = tag['value']
-            var = variables.get(variable_name)
-
-            if var is None:
-                raise Exception(
-                    f"failed to inject '{variable_name}' into snippet")
+            var = variables.get(variable_name, "")
 
             snippet = snippet.replace(tag['tag'], str(var))
 
