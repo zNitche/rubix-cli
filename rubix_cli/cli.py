@@ -1,6 +1,5 @@
 import argparse
 from rubix_cli import __version__
-from rubix_cli import commands as cli_commands
 from rubix_cli.core import Commander
 from rubix_cli.core.cli import CliCommandBase
 from rubix_cli.core.consts import TERM_COLORS
@@ -13,15 +12,18 @@ class CLI:
         self.__commands = self.__get_commands()
 
     def __get_commands(self):
+        from rubix_cli import commands as cli_commands
+
         commands: list[CliCommandBase] = []
 
-        commands.append(cli_commands.CliLsCommand(self.__commander))
+        for cli_command_class in CliCommandBase.__subclasses__():
+            commands.append(cli_command_class(commander=self.__commander)) # type: ignore
 
         return commands
 
     def list_commands(self):
         for cmd in self.__commands:
-            common_utils.print_color(f"### {cmd.cli_invoker}", TERM_COLORS.GREEN)
+            common_utils.print_color(f"- {cmd.cli_invoker}", TERM_COLORS.GREEN)
 
             args = cmd.args
             args_count = len(args.keys()) if args else 0
@@ -29,12 +31,12 @@ class CLI:
             if args and args_count > 0:
                 for arg_name in args:
                     common_utils.print_color(
-                        f"\t{arg_name}: {args[arg_name]}", TERM_COLORS.MAGENTA)
+                        f"{arg_name}: {args[arg_name]}", TERM_COLORS.MAGENTA)
 
             if cmd.description:
                 print(f"description: {cmd.description}")
 
-            print("\n")
+            print()
 
     def execute_command(self, command: str, *args):
         cmd = None
@@ -118,5 +120,4 @@ def get_args():
 
 def run():
     args = get_args()
-
     main(args)
