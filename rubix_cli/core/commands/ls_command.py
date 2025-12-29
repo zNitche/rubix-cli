@@ -4,9 +4,6 @@ from rubix_cli.snippets import filesystem_snippets
 
 
 class LsCommand(CommandBase):
-    def __init__(self, commander: Commander):
-        super().__init__(commander)
-
     def exec(self, path: str = "/"):
         self._commander._logger.info(f"ls at '{path}'")
 
