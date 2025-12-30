@@ -16,7 +16,7 @@ class LsCliCommand(CliCommandBase):
 
 class CatReplCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
-        cli_invoker = "l_repl"
+        cli_invoker = "cat_repl"
         description = ""
         command = commands.CatReplCommand(commander)
 
