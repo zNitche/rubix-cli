@@ -4,7 +4,7 @@ from rubix_cli.core.commands.ls_command import LsCommand
 from rubix_cli.core.commands.cat_repl_command import CatReplCommand
 from rubix_cli.core.commands.reboot_command import RebootCommand
 from rubix_cli.core.commands.flash_command import FlashCommand
-from rubix_cli.core.commands.get_file_command import GetFileCommand
+from rubix_cli.core.commands.cat_command import CatCommand
 from rubix_cli.core.commands.get_rtc_command import GetRtcCommand
 from rubix_cli.core.commands.mkdir_command import MkDirCommand
 from rubix_cli.core.commands.purge_command import PurgeCommand

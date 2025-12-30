@@ -46,12 +46,12 @@ class FlashCliCommand(CliCommandBase):
                          command=command)
 
 
-class GetFileCliCommand(CliCommandBase):
+class CatCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
-        cli_invoker = "get"
+        cli_invoker = "cat"
         description = ""
 
-        command = commands.GetFileCommand(commander)
+        command = commands.CatCommand(commander)
 
         super().__init__(cli_invoker=cli_invoker, description=description,
                          command=command)
