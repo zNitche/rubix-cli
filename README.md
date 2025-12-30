@@ -19,6 +19,21 @@ pip3 install -r requirements/tests.txt
 pytest -v ./tests
 ```
 
+#### .flashignore
+```
+/.DS_Store
+/.git
+/.github
+/.gitignore
+^/commands
+lightberry_config.template.json
+^/.flashignore
+pyproject.toml
+README.md
+LICENSE
+requirements.txt
+```
+
 
 ### Resources
 - [docs.micropython.org](https://docs.micropython.org/en/latest/reference/repl.html)

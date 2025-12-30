@@ -1,9 +1,36 @@
 import os
+import re
 from rubix_cli.core.commands import CommandBase
 from rubix_cli.snippets import filesystem_snippets, flash_snippets
 
 
 class FlashCommand(CommandBase):
+    def __read_flashignore(self, root_path: str):
+        expressions: list[re.Pattern[str]] = []
+        flashignore_path = os.path.join(root_path, ".flashignore")
+
+        if os.path.exists(flashignore_path):
+            self._commander._logger.info("found .flashignore, loading...")
+
+            with open(flashignore_path, "r") as file:
+                content = file.readlines()
+
+                for line in content:
+                    exp = re.compile(line.rstrip())
+                    expressions.append(exp)
+
+            self._commander._logger.info(
+                f".flashignore has been loaded, found {len(expressions)} rules")
+
+        return expressions
+
+    def __check_if_should_be_ignored(self, path: str, expressions: list[re.Pattern[str]]):
+        for exp in expressions:
+            if exp.search(path) is not None:
+                return True
+
+        return False
+
     def __purge(self):
         self._commander._logger.info("purging...")
 
@@ -43,14 +70,20 @@ class FlashCommand(CommandBase):
         flash_snippet = flash_snippets.SnippetFlash()
         self._commander._logger.info(message="purged, flashing...")
 
+        flashignore_exp = self.__read_flashignore(root_path)
+
         for (dirpath, dirnames, filenames) in os.walk(root_path):
             root = dirpath.replace(root_path, "")
+
+            if self.__check_if_should_be_ignored(root, flashignore_exp):
+                continue
 
             for dirname in dirnames:
                 path = f"{root}/{dirname}"
 
-                self.__flash_object(
-                    flash_snippet, dirname=dirname, path=path)
+                if not self.__check_if_should_be_ignored(path, flashignore_exp):
+                    self.__flash_object(
+                        flash_snippet, dirname=dirname, path=path)
 
             for filename in filenames:
                 with open(os.path.join(dirpath, filename), "rb") as file:
@@ -58,5 +91,6 @@ class FlashCommand(CommandBase):
 
                 path = f"{root}/{filename}"
 
-                self.__flash_object(
-                    flash_snippet, filename=filename, file_content=content, path=path)
+                if not self.__check_if_should_be_ignored(path, flashignore_exp):
+                    self.__flash_object(
+                        flash_snippet, filename=filename, file_content=content, path=path)
