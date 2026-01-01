@@ -21,6 +21,8 @@ class FlashCommand(CommandBase):
 
             self._commander._logger.info(
                 f".flashignore has been loaded, found {len(expressions)} rules")
+            
+            expressions.append(re.compile(r"^/.flashignore"))
 
         return expressions
 
