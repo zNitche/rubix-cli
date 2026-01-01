@@ -1,6 +1,7 @@
 .idea
 __pycache__
 .pytest_cache/
+build/
 
 rubix_cli.egg-info/
 
