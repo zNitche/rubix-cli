@@ -14,9 +14,10 @@ rubix-cli --commands
 rubix-cli --device /dev/tty1 --cmd ls /test
 ```
 
+#### Tests (requires micropython mcu connected)
 ```
 pip3 install -r requirements/tests.txt
-pytest -v ./tests
+pytest -v ./tests --device --device /dev/tty1
 ```
 
 #### .flashignore
