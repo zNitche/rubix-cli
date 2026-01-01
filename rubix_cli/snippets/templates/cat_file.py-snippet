@@ -6,8 +6,8 @@ path = "<var>path</var>"
 
 if not file_exists(path):
     print(f"'{path}'' doesn't exist")
-    return
 
-with open(path, "rb") as file:
-    for line in file.readline():
-        print(line.decode())
+else:
+    with open(path, "r") as file:
+        for line in file.readlines():
+            print(line, end="")
