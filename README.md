@@ -1,25 +1,24 @@
 # rubix-cli
-command line tools for interacting with MCUs running MicroPython
+command line tools for interacting with MCUs running MicroPython.
 
-### Description
+### Motivation
 after some time of using shell utils built on top of the `pyboard.py` (using telnetlib which has been deprecated & removed in Python 3.13) I decided to build my own toolset for interacting with MicroPython boards.
 
-### Features
-- pure Python, no 3rd party dependencies
+#### Goals
+- pure Python, no 3rd party dependencies.
 - `termios` used for serial port communication.
 - various commands for files & system management.
-- type hinted
+- type hinted.
 - tests coverage.
 
 ### Compatibility
-program has been tested on RP2040W & ESP32 devkit boards, both running MicroPython v1.25
+program has been tested on RaspberryPi Pico W (RP2040) & ESP32 devkit boards, both running MicroPython v1.25
 
 ### How to use it
-package can be installed via `pip` just add following line to your
-`requirements.txt`.
+package can be installed via `pip`
 
 ```
-rubix-cli @ git+https://github.com/zNitche/rubix-cli.git@<version>
+pip3 install git+https://github.com/zNitche/rubix-cli.git@<version>
 ```
 
 after that verify installation
