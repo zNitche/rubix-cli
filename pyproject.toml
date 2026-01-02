@@ -4,7 +4,7 @@ requires = ["setuptools==70.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-exclude = ["tests", "requirements"]
+exclude = ["tests*", "requirements*"]
 
 [project]
 name = "rubix-cli"
@@ -12,7 +12,7 @@ version = "0.0.1"
 authors = [
   { name = "zNitche" },
 ]
-description = "MicroPython REPL emulator for Unix"
+description = "command line tools for interacting with MCUs running MicroPython"
 readme = "README.md"
 classifiers = [
     "Intended Audience :: Developers",
