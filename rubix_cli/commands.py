@@ -6,7 +6,7 @@ from rubix_cli.core.cli import CliCommandBase
 class LsCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "ls"
-        description = ""
+        description = "list all files & directories at 'path'"
 
         command = commands.LsCommand(commander)
 
@@ -17,7 +17,7 @@ class LsCliCommand(CliCommandBase):
 class CatReplCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "cat_repl"
-        description = ""
+        description = "preview stdout of MicroPython REPL"
         command = commands.CatReplCommand(commander)
 
         super().__init__(cli_invoker=cli_invoker, command=command,
@@ -27,7 +27,7 @@ class CatReplCliCommand(CliCommandBase):
 class RebootCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "reboot"
-        description = ""
+        description = "reboot MCU"
 
         command = commands.RebootCommand(commander)
 
@@ -38,7 +38,7 @@ class RebootCliCommand(CliCommandBase):
 class FlashCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "flash"
-        description = ""
+        description = "upload content of 'root_path' to MCU root directory"
 
         command = commands.FlashCommand(commander)
 
@@ -49,7 +49,7 @@ class FlashCliCommand(CliCommandBase):
 class CatCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "cat"
-        description = ""
+        description = "preview file's specified by 'path' content"
 
         command = commands.CatCommand(commander)
 
@@ -60,7 +60,7 @@ class CatCliCommand(CliCommandBase):
 class GetRtcCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "get_rtc"
-        description = ""
+        description = "get device RTC data"
 
         command = commands.GetRtcCommand(commander)
 
@@ -71,7 +71,7 @@ class GetRtcCliCommand(CliCommandBase):
 class MkDirCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "mkdir"
-        description = ""
+        description = "create directory at 'path'"
 
         command = commands.MkDirCommand(commander)
 
@@ -82,7 +82,7 @@ class MkDirCliCommand(CliCommandBase):
 class PurgeCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "purge"
-        description = ""
+        description = "wipe files & directories stored on device"
 
         command = commands.PurgeCommand(commander)
 
@@ -93,7 +93,7 @@ class PurgeCliCommand(CliCommandBase):
 class RmCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "rm"
-        description = ""
+        description = "remove file specified by 'path'"
 
         command = commands.RmCommand(commander)
 
@@ -104,7 +104,7 @@ class RmCliCommand(CliCommandBase):
 class RmDirCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "rmdir"
-        description = ""
+        description = "remove directory specified by 'path'"
 
         command = commands.RmDirCommand(commander)
 
@@ -115,7 +115,7 @@ class RmDirCliCommand(CliCommandBase):
 class SetRtcCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "set_rtc"
-        description = ""
+        description = "set MCU RTC to current date"
 
         command = commands.SetRtcCommand(commander)
 
@@ -126,7 +126,7 @@ class SetRtcCliCommand(CliCommandBase):
 class UnameCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "uname"
-        description = ""
+        description = "get MCU uname info"
 
         command = commands.UnameCommand(commander)
 
@@ -137,7 +137,7 @@ class UnameCliCommand(CliCommandBase):
 class UploadFileCliCommand(CliCommandBase):
     def __init__(self, commander: Commander):
         cli_invoker = "upload"
-        description = ""
+        description = "upload file from 'source_path' to 'target_path' on MCU"
 
         command = commands.UploadFileCommand(commander)
 
