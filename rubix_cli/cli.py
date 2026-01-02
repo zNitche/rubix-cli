@@ -17,7 +17,8 @@ class CLI:
         commands: list[CliCommandBase] = []
 
         for cli_command_class in CliCommandBase.__subclasses__():
-            commands.append(cli_command_class(commander=self.__commander)) # type: ignore
+            commands.append(cli_command_class(
+                commander=self.__commander))  # type: ignore
 
         return commands
 
@@ -25,16 +26,22 @@ class CLI:
         for cmd in self.__commands:
             common_utils.print_color(f"- {cmd.cli_invoker}", TERM_COLORS.GREEN)
 
+            if cmd.description:
+                print("Description:")
+                common_utils.print_color(cmd.description, TERM_COLORS.MAGENTA)
+
             args = cmd.args
             args_count = len(args.keys()) if args else 0
 
             if args and args_count > 0:
+                if cmd.description:
+                    print()
+
+                print("Args:")
+
                 for arg_name in args:
                     common_utils.print_color(
-                        f"{arg_name}: {args[arg_name]}", TERM_COLORS.MAGENTA)
-
-            if cmd.description:
-                print(f"description: {cmd.description}")
+                        f" {arg_name}: {args[arg_name]}", TERM_COLORS.MAGENTA)
 
             print()
 
@@ -118,6 +125,7 @@ def get_args():
     return argument_parser.parse_args()
 
 
+# entrypoint for package
 def run():
     args = get_args()
     main(args)
