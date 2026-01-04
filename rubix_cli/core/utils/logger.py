@@ -7,9 +7,6 @@ class Logger:
         self.enabled = True
         self.debug_mode = False
 
-        self.backup_log_files_count = None
-        self.logs_path = None
-
         self.__logger = logging.getLogger(
             __name__ if logger_name is None else logger_name)
 
