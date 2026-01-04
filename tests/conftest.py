@@ -8,7 +8,7 @@ def pytest_addoption(parser):
     parser.addoption("--device", action="store", default="example, /dev/tty1")
 
 
-def pytest_sessionstart(session):
+def pytest_sessionstart(session: pytest.Session):
     device_path = session.config.getoption("--device")
     commander = Commander(interface=device_path)
 
@@ -19,6 +19,14 @@ def pytest_sessionstart(session):
     commander.soft_reboot()
 
     time.sleep(0.2)
+
+
+def pytest_sessionfinish(session: pytest.Session):
+    device_path = session.config.getoption("--device")
+    commander = Commander(interface=device_path)
+
+    cmd = PurgeCommand(commander=commander)
+    cmd.exec()
 
 
 @pytest.fixture(scope="session")
