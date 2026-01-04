@@ -12,6 +12,8 @@ def pytest_sessionstart(session: pytest.Session):
     device_path = session.config.getoption("--device")
     commander = Commander(interface=device_path)
 
+    setattr(session, "rubix_commander", commander)
+
     cmd = PurgeCommand(commander=commander)
     cmd.exec()
     time.sleep(0.2)
@@ -22,8 +24,7 @@ def pytest_sessionstart(session: pytest.Session):
 
 
 def pytest_sessionfinish(session: pytest.Session):
-    device_path = session.config.getoption("--device")
-    commander = Commander(interface=device_path)
+    commander = getattr(session, "rubix_commander")
 
     cmd = PurgeCommand(commander=commander)
     cmd.exec()
