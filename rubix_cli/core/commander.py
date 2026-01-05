@@ -23,6 +23,12 @@ class Commander:
         return SerialTTY(
             interface=interface, debug=debug, timeout=timeout,
             baudrate=baudrate, write_buffer_size=write_buffer_size)
+    
+    def close_serial_tty(self):
+        self._logger.debug("closing serial tty")
+
+        if self.__serial:
+            self.__serial.close()
 
     def __parse_command_response(self, response: bytes):
         decoded_response = response.decode()

@@ -56,7 +56,14 @@ class CLI:
         if not cmd:
             raise Exception(f"unknown command '{command}'")
 
-        cmd.command.exec(*args)
+        try:
+            cmd.command.exec(*args)
+
+        except Exception as e:
+            raise e
+        
+        finally:
+            self.__commander.close_serial_tty()
 
 
 def main(args: argparse.Namespace):
