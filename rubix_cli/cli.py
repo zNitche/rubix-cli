@@ -1,29 +1,32 @@
 import argparse
 from rubix_cli import __version__
-from rubix_cli.core import Commander
+from rubix_cli.core import Commander, common_utils
 from rubix_cli.core.cli import CliCommandBase
 from rubix_cli.core.consts import TERM_COLORS
-from rubix_cli.core import common_utils
 
 
 class CLI:
     def __init__(self, commander: Commander):
         self.__commander = commander
-        self.__commands = self.__get_commands()
+        self.__commands = self.__get_commands(self.__commander)
 
-    def __get_commands(self):
+    @staticmethod
+    def __get_commands(commander: Commander | None = None):
         from rubix_cli import commands as cli_commands
 
         commands: list[CliCommandBase] = []
 
         for cli_command_class in CliCommandBase.__subclasses__():
             commands.append(cli_command_class(
-                commander=self.__commander))  # type: ignore
+                commander=commander))  # type: ignore
 
         return commands
 
-    def list_commands(self):
-        for cmd in self.__commands:
+    @staticmethod
+    def list_commands():
+        commands = CLI.__get_commands()
+
+        for cmd in commands:
             common_utils.print_color(f"- {cmd.cli_invoker}", TERM_COLORS.GREEN)
 
             if cmd.description:
@@ -81,22 +84,23 @@ def main(args: argparse.Namespace):
 
     show_commands = args.commands
 
-    commander = Commander(interface=interface, debug=debug, timeout=timeout,
-                          baudrate=baudrate, write_buffer_size=write_buffer_size)
-    cli = CLI(commander=commander)
-
     if show_version:
         print(f"v{__version__}")
         return
 
     if show_commands:
-        cli.list_commands()
+        CLI.list_commands()
         return
 
     if not cmd:
         raise Exception("cmd not passed")
 
-    cli.execute_command(cmd, *cmd_args)
+    else:
+        commander = Commander(interface=interface, debug=debug, timeout=timeout,
+                              baudrate=baudrate, write_buffer_size=write_buffer_size)
+
+        cli = CLI(commander=commander)
+        cli.execute_command(cmd, *cmd_args)
 
 
 def get_args():
