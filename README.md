@@ -2,10 +2,10 @@
 command line tools for interacting with MCUs running MicroPython.
 
 ### Motivation
-after some time of using shell utils built on top of the `pyboard.py` (using telnetlib which has been deprecated & removed in Python 3.13) I decided to build my own toolset for interacting with MicroPython boards.
+after some time of using shell utils built on top of the `pyboard.py` (using telnetlib which was deprecated & removed in Python 3.13) I decided to build my own toolset for interacting with MicroPython boards.
 
 #### Goals
-- pure Python, no 3rd party dependencies.
+- no 3rd party dependencies.
 - `termios` used for serial port communication.
 - various commands for files & system management.
 - type hinted.
