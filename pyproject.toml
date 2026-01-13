@@ -4,7 +4,10 @@ requires = ["setuptools==70.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-exclude = ["tests*", "requirements*"]
+include = ["rubix_cli*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.py-snippet"]
 
 [project]
 name = "rubix-cli"
