@@ -62,6 +62,8 @@ class FlashCommand(CommandBase):
         if not root_path:
             raise Exception("path can't be empty")
 
+        root_path = os.path.abspath(root_path)
+
         self._commander._logger.info(f"flashing '{root_path}'")
 
         if os.path.isfile(root_path):
