@@ -95,7 +95,7 @@ class Commander:
             self.soft_reboot()
             self.__serial.enter_repl()
 
-            time.sleep(0.1)
+            time.sleep(0.5)
             self.soft_reboot()
 
             while True:
